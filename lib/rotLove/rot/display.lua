@@ -13,13 +13,11 @@ local Display = ROT.Class:extend("Display")
 -- @tparam[opt] table dfg Default foreground color as a table defined as {r,g,b,a}
 -- @tparam[opt] table dbg Default background color
 -- @tparam[opt=false] boolean fullOrFlags In Love 0.8.0: Use fullscreen In Love 0.9.0: a table defined for love.graphics.setMode
--- @tparam[opt=false] boolean vsync Use vsync
--- @tparam[opt=0] int fsaa Number of fsaa passes
 -- @tparam[opt=cp437.png] image love image
 -- @tparam[opt=9] cw tile width
 -- @tparam[opt=16] ch tile height
 -- @return nil
-function Display:init(w, h, scale, vsync, fsaa, image, cw, ch, fullOrFlags, dfg, dbg)
+function Display:init(w, h, scale, image, cw, ch, flags, dfg, dbg)
     self.__name='Display'
     self.widthInChars = w and w or 80
     self.heightInChars= h and h or 24
@@ -34,13 +32,8 @@ function Display:init(w, h, scale, vsync, fsaa, image, cw, ch, fullOrFlags, dfg,
     self.oldBackgroundColors={{}}
     self.oldForegroundColors={{}}
     self.graphics=love.graphics
-    if love.window then
-        love.window.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars, fullOrFlags)
-        self.drawQ=self.graphics.draw
-    else
-        self.graphics.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars, fullOrFlags, vsync, fsaa)
-        self.drawQ=self.graphics.drawq
-    end
+    love.window.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars)
+    self.drawQ=self.graphics.draw
 
     self.defaultForegroundColor=dfg and dfg or { 235, 235, 235 }
     self.defaultBackgroundColor=dbg and dbg or { 15, 15, 15 }

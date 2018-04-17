@@ -1,15 +1,46 @@
 ROT = require 'lib/rotLove/rot' 
 COLORS = require 'colors'
-SCREEN_HEIGHT = 25
-SCREEN_WIDTH = 25
+Class = require 'class'
+require 'player'
+
+SCREEN_HEIGHT = 45
+SCREEN_WIDTH = 78
 
 map = {}
-player = {}
+entities = {}
+numEntities = 0
 
 function love.load()
+	--Setup tileset / display
 	spriteSheet = love.graphics.newImage('Cheepicus_8x8x2.png')
-	root = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 1, false, 0, spriteSheet, 16, 16)
-	fov = ROT.FOV.Precise:new(lightCallback)
+	root = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 1, spriteSheet, 16, 16)
+	player = Player(4, 4, '@', COLORS.MAROON, COLORS.YELLOW)
+	for x = 1, SCREEN_WIDTH, 1 do
+		map[x] = {}
+		for y = 1, SCREEN_HEIGHT, 1 do
+			--passable: 1 for false, 0 for true
+			map[x][y] = {symbol = ' ', passable = 1, fg = COLORS.YELLOW, bg = COLORS.YELLOW}
+		end
+	end
+	--parsing the start screen file
+	for line in io.lines('pyramid.csv') do
+		local tempTile = {}
+		local i = 1
+		for word in string.gmatch(line, '([^,]+)') do
+    		tempTile[i] = word
+			i = i + 1
+		end
+		local x = tonumber(tempTile[1])
+		local y = tonumber(tempTile[2])
+		local char = string.char(tempTile[3])
+		local fore = ROT.Color.fromString(tempTile[4])
+		local back = ROT.Color.fromString(tempTile[5])
+		local pass = 1
+		if char == '\176' then
+			pass = 0
+		end
+		setTile(x, y, char, pass, fore, back)
+	end
 
 	while inBounds == false do
 		playerx = love.math.random(SCREEN_WIDTH)
@@ -18,24 +49,24 @@ function love.load()
 			inBounds = true
 		end
 	end
-	player = {x = playerx, y = playery, symbol = '@', fg = white}
     drawMap()
 end
 
+function addEntity(entity)
+	entities[numEntities + 1] = entity
+	numEntities = numEntities + 1
+end	
+
 function setTile(x, y, symbol, passable, fg, bg)
 	local symbol = symbol or map[x][y].symbol
-	local pass = map[x][y].passable
-	if passable ~= nil then
-		pass = passable	
-	end
+	local pass = passable or map[x][y].passable
 	local fg = fg or map[x][y].fg
 	local bg = bg or map[x][y].bg
 	map[x][y].symbol = symbol
-	map[x][y].passable = pass
+	map[x][y].passable = passable
 	map[x][y].fg = fg
 	map[x][y].bg = bg
 end
-	
 
 function drawMap()
 	for x = 1, SCREEN_WIDTH, 1 do
@@ -52,17 +83,20 @@ function love.keypressed(key)
 end
 
 function love.textinput(t)
+-- TODO: Handle input
 end
 
 function isPassable(x, y)
-	return map[x][y].passable
+	if map[x][y].passable == 0 then
+		return true
+	else
+		return false
+	end
 end
 
 function love.update()	
-	root:write(player.symbol, player.x, player.y, player.fg, map[player.x][player.y].bg)		
 end
 
 function love.draw() 
 	root:draw()
-	root:write(map[player.x][player.y].symbol, player.x, player.y, map[player.x][player.y].fg, map[player.x][player.y].bg)
 end
