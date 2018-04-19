@@ -1,7 +1,7 @@
 ROT = require 'lib/rotLove/rot' 
 COLORS = require 'colors'
 Class = require 'class'
-require 'player'
+require 'entity'
 require 'map'
 
 SCREEN_HEIGHT = 45
@@ -13,8 +13,8 @@ numEntities = 0
 function love.load()
 	--Setup tileset / display
 	local spriteSheet = love.graphics.newImage('Cheepicus_8x8x2.png')
-	player = Entity(4, 4, '@', COLORS.MAROON, COLORS.YELLOW)
 	map = Map(SCREEN_WIDTH, SCREEN_HEIGHT, root, spriteSheet)
+	player = Entity(4, 4, '@', COLORS.MAROON, COLORS.YELLOW, map)
 	--parsing the start screen file: x position, y position, character, foreground, background
 	for line in io.lines('pyramid.csv') do
 		local tempTile = {}
@@ -35,13 +35,6 @@ function love.load()
 		end
 	end
 
-	while inBounds == false do
-		playerx = love.math.random(SCREEN_WIDTH)
-		playery = love.math.random(SCREEN_HEIGHT)
-		if isPassable(playerx, playery) then
-			inBounds = true
-		end
-	end
 end
 
 function love.keypressed(key)
@@ -52,9 +45,20 @@ end
 
 function love.textinput(t)
 -- TODO: Handle input
+	if t == 'w' then
+		player:move(0, -1)
+	elseif t == 'd' then
+		player:move(1, 0)
+	elseif t == 's' then
+		player:move(0, 1)
+	elseif t == 'a' then
+		player:move(-1, 0)
+	end
 end
 
 function love.update()	
+	--Draws characters on the virtual terminal but not the screen
+	map:drawMap()
 end
 
 function love.draw() 

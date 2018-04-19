@@ -11,7 +11,7 @@ function Map:init(width, height, display, spriteSheet)
 		self.map[x] = {}
 		for y = 1, height, 1 do
 			--passable: 1 for false, 0 for true
-			self.map[x][y] = {symbol = 'H', passable = 1, fg = COLORS.YELLOW, bg = COLORS.YELLOW}
+			self.map[x][y] = {symbol = ' ', passable = 0, fg = COLORS.YELLOW, bg = COLORS.YELLOW}
 		end
 	end
 	self:drawMap()
@@ -30,8 +30,14 @@ function Map:setTile(x, y, symbol, passable, fg, bg)
 end
 
 function Map:isPassable(x, y)
-	if map[x][y].passable == 0 then
-		return true
+	if self.map[x][y].passable == 0 then
+		for i = 1, self.numEntities, 1 do
+			if x == self.entities[i].x and y == self.entities[i].y then
+				return false
+			else
+				return true
+			end
+		end
 	else
 		return false
 	end
@@ -42,6 +48,11 @@ function Map:drawMap()
 		for y = 1, SCREEN_HEIGHT, 1 do
 			self.display:write(self.map[x][y].symbol, x, y, self.map[x][y].fg, self.map[x][y].bg)
 		end
+	end
+	
+	for i = 1, self.numEntities, 1 do
+		local e = self.entities[i]
+		self.display:write(e.symbol, e.x, e.y, e.fg, e.bg)
 	end
 end
 
