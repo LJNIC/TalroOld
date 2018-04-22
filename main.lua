@@ -4,6 +4,7 @@ Class = require 'class'
 require 'entity'
 require 'map'
 require 'player'
+require 'util'
 
 SCREEN_HEIGHT = 45
 SCREEN_WIDTH = 78
@@ -52,18 +53,6 @@ function love.textinput(t)
 		if moveKeys[t] then
 			player:move(keyToDirection(t))
 		end
-	end
-end
-
-function keyToDirection(key)
-	if key == 'w' then
-		return {x=0, y=-1}
-	elseif key == 'd' then
-		return {x=1, y=0}
-	elseif key == 's' then
-		return {x=0, y=1}
-	elseif key == 'a' then
-		return {x=-1, y=0}
 	end
 end
 
