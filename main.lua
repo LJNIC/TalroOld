@@ -3,12 +3,13 @@ COLORS = require 'colors'
 Class = require 'class'
 require 'entity'
 require 'map'
+require 'player'
 
 SCREEN_HEIGHT = 45
 SCREEN_WIDTH = 78
 
 moveKeys = {['w'] = true, ['d'] = true, ['s'] = true, ['a'] = true}
-actionKeys = {}
+actionKeys = {['t'] = true}
 
 map = {}
 entities = {}
@@ -17,7 +18,7 @@ numEntities = 0
 function love.load()
 	--Setup tileset / display
 	local spriteSheet = love.graphics.newImage('Cheepicus_8x8x2.png') map = Map(SCREEN_WIDTH, SCREEN_HEIGHT, root, spriteSheet)
-	player = Entity(4, 4, '@', COLORS.MAROON, COLORS.YELLOW, map)
+	player = Player(4, 4, '@', COLORS.MAROON, COLORS.YELLOW, map)
 	enemy = Entity(5, 5, 'T', COLORS.GREEN, COLORS.YELLOW, map)
 	--parsing the start screen file: x position, y position, character, foreground, background
 	for line in io.lines('pyramid.csv') do
@@ -49,12 +50,12 @@ function love.textinput(t)
 -- TODO: Handle input
 	if gameState == 'playing' then
 		if moveKeys[t] then
-			player:move(toDirection(t))
+			player:move(keyToDirection(t))
 		end
 	end
 end
 
-function toDirection(key)
+function keyToDirection(key)
 	if key == 'w' then
 		return {x=0, y=-1}
 	elseif key == 'd' then
