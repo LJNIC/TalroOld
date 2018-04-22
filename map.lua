@@ -17,21 +17,23 @@ function Map:init(width, height, display, spriteSheet)
 	self:drawMap()
 end
 
+--sets a tile, only x and y are non-optional
 function Map:setTile(x, y, symbol, passable, fg, bg)
-	local symbol = symbol or map[x][y].symbol
-	local pass = passable or map[x][y].passable
-	local fg = fg or map[x][y].fg
-	local bg = bg or map[x][y].bg
+	local symbol = symbol or self.map[x][y].symbol
+	local pass = passable or self.map[x][y].passable
+	local fg = fg or self.map[x][y].fg
+	local bg = bg or self.map[x][y].bg
 
-	map[x][y].symbol = symbol
-	map[x][y].passable = passable
-	map[x][y].fg = fg
-	map[x][y].bg = bg
+	self.map[x][y].symbol = symbol
+	self.map[x][y].passable = passable
+	self.map[x][y].fg = fg
+	self.map[x][y].bg = bg
 end
 
+--checks whether a tile contains a wall or an entity
 function Map:isPassable(x, y)
 	if self.map[x][y].passable == 0 then
-		for i = 1, self.numEntities, 1 do
+		for i = 2, self.numEntities, 1 do --skip 1 because that will always be the player
 			if x == self.entities[i].x and y == self.entities[i].y then
 				return false
 			else
@@ -43,28 +45,26 @@ function Map:isPassable(x, y)
 	end
 end
 
+--writes the characters to the object, not to screen
 function Map:drawMap()
+	--write the terrain
 	for x = 1, SCREEN_WIDTH, 1 do
 		for y = 1, SCREEN_HEIGHT, 1 do
 			self.display:write(self.map[x][y].symbol, x, y, self.map[x][y].fg, self.map[x][y].bg)
 		end
 	end
-	
+	--write entities on top	
 	for i = 1, self.numEntities, 1 do
-		local e = self.entities[i]
-		self.display:write(e.symbol, e.x, e.y, e.fg, e.bg)
+		self.display:write(self.entities[i].symbol, self.entities[i].x, self.entities[i].y, self.entities[i].fg, self.entities[i].bg)
 	end
 end
 
-function Map:getDisplay()
-	return self.display
-end
-
+--renders the map onto the screen
 function Map:renderMap()
 	self.display:draw()
 end
 
 function Map:addEntity(entity)
-	self.entities[numEntities + 1] = entity
+	self.entities[self.numEntities + 1] = entity
 	self.numEntities = self.numEntities + 1
 end	

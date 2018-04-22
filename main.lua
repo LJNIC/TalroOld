@@ -6,15 +6,19 @@ require 'map'
 
 SCREEN_HEIGHT = 45
 SCREEN_WIDTH = 78
+
+moveKeys = {['w'] = true, ['d'] = true, ['s'] = true, ['a'] = true}
+actionKeys = {}
+
 map = {}
 entities = {}
 numEntities = 0
 
 function love.load()
 	--Setup tileset / display
-	local spriteSheet = love.graphics.newImage('Cheepicus_8x8x2.png')
-	map = Map(SCREEN_WIDTH, SCREEN_HEIGHT, root, spriteSheet)
+	local spriteSheet = love.graphics.newImage('Cheepicus_8x8x2.png') map = Map(SCREEN_WIDTH, SCREEN_HEIGHT, root, spriteSheet)
 	player = Entity(4, 4, '@', COLORS.MAROON, COLORS.YELLOW, map)
+	enemy = Entity(5, 5, 'T', COLORS.GREEN, COLORS.YELLOW, map)
 	--parsing the start screen file: x position, y position, character, foreground, background
 	for line in io.lines('pyramid.csv') do
 		local tempTile = {}
@@ -34,25 +38,31 @@ function love.load()
 			pass = 0
 		end
 	end
+	gameState = 'playing'
 
 end
 
 function love.keypressed(key)
-	if key == 'escape' then
-		love.event.quit()
-	end
 end
 
 function love.textinput(t)
 -- TODO: Handle input
-	if t == 'w' then
-		player:move(0, -1)
-	elseif t == 'd' then
-		player:move(1, 0)
-	elseif t == 's' then
-		player:move(0, 1)
-	elseif t == 'a' then
-		player:move(-1, 0)
+	if gameState == 'playing' then
+		if moveKeys[t] then
+			player:move(toDirection(t))
+		end
+	end
+end
+
+function toDirection(key)
+	if key == 'w' then
+		return {x=0, y=-1}
+	elseif key == 'd' then
+		return {x=1, y=0}
+	elseif key == 's' then
+		return {x=0, y=1}
+	elseif key == 'a' then
+		return {x=-1, y=0}
 	end
 end
 

@@ -10,9 +10,9 @@ function Entity:init(x, y, symbol, fg, bg, map)
 	self.map:addEntity(self)
 end
 
-function Entity:move(dx, dy)
-	if self.map:isPassable(self.x + dx, self.y + dy) == true then
-		self.x = self.x + dx
-		self.y = self.y + dy
+function Entity:move(direction)
+	if self.map:isPassable(self.x + direction.x, self.y + direction.y) == true then
+		self.x = self.x + direction.x
+		self.y = self.y + direction.y
 	end 
 end
