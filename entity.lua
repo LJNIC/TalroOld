@@ -1,4 +1,6 @@
 Entity = Class{}
+
+
 --x position, y position, graphic, foreground, background
 function Entity:init(x, y, symbol, fg, bg, map)
 	self.x = x

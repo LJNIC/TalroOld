@@ -2,14 +2,16 @@ ROT = require 'lib/rotLove/rot'
 COLORS = require 'colors'
 Map = Class{}
 
-function Map:init(width, height, display, spriteSheet)
-	self.display = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 1, spriteSheet, 16, 16)
+function Map:init(width, height, spriteSheet)
+	self.display = ROT.Display:new(width, height, 1, spriteSheet, 16, 16)
 	self.map = {}
+	self.width = width
+	self.height = height
 	self.entities = {}
 	self.numEntities = 0
-	for x = 1, width, 1 do
+	for x = 1, self.width, 1 do
 		self.map[x] = {}
-		for y = 1, height, 1 do
+		for y = 1, self.height, 1 do
 			--passable: 1 for false, 0 for true
 			self.map[x][y] = {symbol = ' ', passable = 0, fg = COLORS.YELLOW, bg = COLORS.YELLOW}
 		end
@@ -29,13 +31,12 @@ function Map:setTile(x, y, symbol, passable, fg, bg)
 	self.map[x][y].fg = fg
 	self.map[x][y].bg = bg
 end
-
 --checks whether a tile contains a wall or an entity
 function Map:isPassable(x, y)
 	if self.map[x][y].passable == 0 then
-		for i = 2, self.numEntities, 1 do --skip 1 because that will always be the player
+		for i = 1, self.numEntities, 1 do --skip 1 because that will always be the player
 			if x == self.entities[i].x and y == self.entities[i].y then
-				return false
+				return false, self.entities[i]
 			else
 				return true
 			end
@@ -48,14 +49,18 @@ end
 --writes the characters to the object, not to screen
 function Map:drawMap()
 	--write the terrain
-	for x = 1, SCREEN_WIDTH, 1 do
-		for y = 1, SCREEN_HEIGHT, 1 do
+	for x = 1, self.width, 1 do
+		for y = 1, self.height, 1 do
 			self.display:write(self.map[x][y].symbol, x, y, self.map[x][y].fg, self.map[x][y].bg)
 		end
 	end
 	--write entities on top	
 	for i = 1, self.numEntities, 1 do
-		self.display:write(self.entities[i].symbol, self.entities[i].x, self.entities[i].y, self.entities[i].fg, self.entities[i].bg)
+		self.display:write(self.entities[i].symbol, 
+							self.entities[i].x, 
+							self.entities[i].y, 
+							self.entities[i].fg, 
+							self.map[self.entities[i].x][self.entities[i].y].bg)
 	end
 end
 

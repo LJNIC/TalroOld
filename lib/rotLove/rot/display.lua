@@ -18,45 +18,45 @@ local Display = ROT.Class:extend("Display")
 -- @tparam[opt=16] ch tile height
 -- @return nil
 function Display:init(w, h, scale, image, cw, ch, flags, dfg, dbg)
-    self.__name='Display'
+    self.__name = 'Display'
     self.widthInChars = w and w or 80
-    self.heightInChars= h and h or 24
-    self.scale=scale or 1
-    self.charWidth=cw*self.scale
-    self.charHeight=ch*self.scale
-    self.glyphs={}
-    self.chars={{}}
-    self.backgroundColors={{}}
-    self.foregroundColors={{}}
-    self.oldChars={{}}
-    self.oldBackgroundColors={{}}
-    self.oldForegroundColors={{}}
-    self.graphics=love.graphics
+    self.heightInChars = h and h or 24
+    self.scale = scale or 1
+    self.charWidth = cw*self.scale
+    self.charHeight = ch*self.scale
+    self.glyphs = {}
+    self.chars = {{}}
+    self.backgroundColors = {{}}
+    self.foregroundColors = {{}}
+    self.oldChars = {{}}
+    self.oldBackgroundColors = {{}}
+    self.oldForegroundColors = {{}}
+    self.graphics = love.graphics
     love.window.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars)
-    self.drawQ=self.graphics.draw
+    self.drawQ = self.graphics.draw
 
-    self.defaultForegroundColor=dfg and dfg or { 235, 235, 235 }
-    self.defaultBackgroundColor=dbg and dbg or { 15, 15, 15 }
+    self.defaultForegroundColor = dfg and dfg or { 235, 235, 235 }
+    self.defaultBackgroundColor = dbg and dbg or { 15, 15, 15 }
 
     self.graphics.setBackgroundColor(self.defaultBackgroundColor)
 
-    self.canvas=self.graphics.newCanvas(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars)
+    self.canvas = self.graphics.newCanvas(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars)
 
-    self.glyphSprite= image or self.graphics.newImage(Display_Path .. 'img/cp437.png')
-    for i=0,255 do
-        local sx=(i%16)*cw
-        local sy=math.floor(i/16)*ch
-        self.glyphs[i]=self.graphics.newQuad(sx, sy, cw, ch, self.glyphSprite:getWidth(), self.glyphSprite:getHeight())
+    self.glyphSprite = image or self.graphics.newImage(Display_Path .. 'img/cp437.png')
+    for i = 0, 255 do
+        local sx = (i%16)*cw
+        local sy = math.floor(i/16)*ch
+        self.glyphs[i] = self.graphics.newQuad(sx, sy, cw, ch, self.glyphSprite:getWidth(), self.glyphSprite:getHeight())
     end
 
-    for i=1,self.widthInChars do
+    for i = 1, self.widthInChars do
         self.chars[i]               = {}
         self.backgroundColors[i]    = {}
         self.foregroundColors[i]    = {}
         self.oldChars[i]            = {}
         self.oldBackgroundColors[i] = {}
         self.oldForegroundColors[i] = {}
-        for j=1,self.heightInChars do
+        for j = 1,self.heightInChars do
             self.chars[i][j]               = 32
             self.backgroundColors[i][j]    = self.defaultBackgroundColor
             self.foregroundColors[i][j]    = self.defaultForegroundColor
@@ -71,20 +71,20 @@ end
 -- The main draw function. This should be called from love.draw() to display any written characters to screen
 function Display:draw()
     self.graphics.setCanvas(self.canvas)
-    for x=1,self.widthInChars do
-        for y=1,self.heightInChars do
-            local c =self.chars[x][y]
-            local bg=self.backgroundColors[x][y]
-            local fg=self.foregroundColors[x][y]
-            local px=(x-1)*self.charWidth
-            local py=(y-1)*self.charHeight
+    for x = 1,self.widthInChars do
+        for y = 1,self.heightInChars do
+            local c = self.chars[x][y]
+            local bg = self.backgroundColors[x][y]
+            local fg = self.foregroundColors[x][y]
+            local px = (x-1)*self.charWidth
+            local py = (y-1)*self.charHeight
             if self.oldChars[x][y]            ~= c  or
                self.oldBackgroundColors[x][y] ~= bg or
                self.oldForegroundColors[x][y] ~= fg then
 
                 self:_setColor(bg)
                 self.graphics.rectangle('fill', px, py, self.charWidth, self.charHeight)
-                if c~=32 and c~=255 then
+                if c ~= 32 and c ~= 255 then
                     local qd=self.glyphs[c]
                     self:_setColor(fg)
                     self.drawQ(self.glyphSprite, qd, px, py, nil, self.scale)
@@ -122,7 +122,7 @@ function Display:getDefaultForegroundColor() return self.defaultForegroundColor 
 -- @tparam int y The y-position of the character
 -- @treturn string The character
 function Display:getCharacter(x, y)
-    local c=self.chars[x][y]
+    local c = self.chars[x][y]
     return c and string.char(c) or nil
 end
 
@@ -169,12 +169,12 @@ function Display:clear(c, x, y, w, h, fg, bg)
     c = c or ' '
     w = w or self.widthInChars
     local s = c:rep(self.widthInChars)
-    x =self:_validateX(x, s)
-    y =self:_validateY(y)
-    h =self:_validateHeight(y, h)
-    fg=self:_validateForegroundColor(fg)
-    bg=self:_validateBackgroundColor(bg)
-    for i=0,h-1 do
+    x = self:_validateX(x, s)
+    y = self:_validateY(y)
+    h = self:_validateHeight(y, h)
+    fg = self:_validateForegroundColor(fg)
+    bg = self:_validateBackgroundColor(bg)
+    for i = 0, h-1 do
         self:_writeValidatedString(s, x, y+i, fg, bg)
     end
 end
@@ -196,8 +196,8 @@ function Display:write(s, x, y, fg, bg)
     ROT.assert(s, "Display:write() must have string as param")
     x = self:_validateX(x, s)
     y = self:_validateY(y, s)
-    fg= self:_validateForegroundColor(fg)
-    bg= self:_validateBackgroundColor(bg)
+    fg = self:_validateForegroundColor(fg)
+    bg = self:_validateBackgroundColor(bg)
 
     self:_writeValidatedString(s, x, y, fg, bg)
 end
@@ -213,15 +213,15 @@ function Display:writeCenter(s, y, fg, bg)
     ROT.assert(#s<self.widthInChars, "Length of ",s," is greater than screen width")
     y = y and y or math.floor((self:getHeightInChars() - 1) / 2)
     y = self:_validateY(y, s)
-    fg= self:_validateForegroundColor(fg)
-    bg= self:_validateBackgroundColor(bg)
+    fg = self:_validateForegroundColor(fg)
+    bg = self:_validateBackgroundColor(bg)
 
-    local x=math.floor((self.widthInChars-#s)/2)
+    local x = math.floor((self.widthInChars-#s)/2)
     self:_writeValidatedString(s, x, y, fg, bg)
 end
 
 function Display:_writeValidatedString(s, x, y, fg, bg)
-    for i=1,#s do
+    for i = 1,#s do
         self.backgroundColors[x+i-1][y] = bg
         self.foregroundColors[x+i-1][y] = fg
         self.chars[x+i-1][y]            = s:byte(i)
