@@ -8,5 +8,3 @@
   Hint at hidden caves/rooms that can be mined or exploded.
 
 * Varied world generation
-
-

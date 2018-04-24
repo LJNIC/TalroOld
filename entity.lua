@@ -1,6 +1,5 @@
 Entity = Class{}
 
-
 --x position, y position, graphic, foreground, background
 function Entity:init(x, y, symbol, fg, bg, map)
 	self.x = x
@@ -16,5 +15,5 @@ function Entity:move(direction)
 	if self.map:isPassable(self.x + direction.x, self.y + direction.y) == true then
 		self.x = self.x + direction.x
 		self.y = self.y + direction.y
-	end 
+	end
 end

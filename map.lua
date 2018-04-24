@@ -12,7 +12,7 @@ function Map:init(width, height, spriteSheet)
 	for x = 1, self.width, 1 do
 		self.map[x] = {}
 		for y = 1, self.height, 1 do
-			--passable: 1 for false, 0 for true
+			--passable: 0 for true, 1 for non-wall, 2 for wall
 			self.map[x][y] = {symbol = ' ', passable = 0, fg = COLORS.YELLOW, bg = COLORS.YELLOW}
 		end
 	end
@@ -34,7 +34,7 @@ end
 --checks whether a tile contains a wall or an entity
 function Map:isPassable(x, y)
 	if self.map[x][y].passable == 0 then
-		for i = 1, self.numEntities, 1 do --skip 1 because that will always be the player
+		for i = 2, self.numEntities, 1 do --skip 1 because that will always be the player
 			if x == self.entities[i].x and y == self.entities[i].y then
 				return false, self.entities[i]
 			else
