@@ -1,7 +1,6 @@
 ROT = require 'lib/rotLove/rot'
 COLORS = require 'colors'
 Class = require 'lib/class'
-Timer = require 'timer'
 require 'entity'
 require 'map'
 require 'player'
