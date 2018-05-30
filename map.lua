@@ -1,21 +1,27 @@
 ROT = require 'lib/rotLove/rot' 
 COLORS = require 'colors'
+generator = require 'generator'
 Map = Class{}
 
 function Map:init(width, height, spriteSheet)
 	self.display = ROT.Display:new(width, height, 1, spriteSheet, 16, 16)
 	self.map = {}
+
+	self.map = generator.generate(width, height, 6, 10, 50, 7)
 	self.width = width
 	self.height = height
 	self.entities = {}
 	self.numEntities = 0
 	for x = 1, self.width, 1 do
-		self.map[x] = {}
 		for y = 1, self.height, 1 do
-			--passable: 0 for true, 1 for non-wall, 2 for wall
-			self.map[x][y] = {symbol = ' ', passable = 0, fg = COLORS.YELLOW, bg = COLORS.YELLOW}
+			if self.map[x][y] == ' ' then
+				self:setTile(x, y, ' ', true, COLORS.YELLOW, COLORS.YELLOW)
+			else 
+				self:setTile(x, y, '#', false, COLORS.BROWN, COLORS.BROWN)
+			end
 		end
 	end
+				
 	self:drawMap()
 end
 
@@ -31,6 +37,7 @@ function Map:setTile(x, y, symbol, passable, fg, bg)
 	self.map[x][y].fg = fg
 	self.map[x][y].bg = bg
 end
+
 --checks whether a tile contains a wall or an entity
 function Map:isPassable(x, y)
 	if self.map[x][y].passable == 0 then
