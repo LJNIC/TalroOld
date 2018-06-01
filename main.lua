@@ -1,6 +1,7 @@
 ROT = require 'lib/rotLove/rot'
 COLORS = require 'colors'
 Class = require 'lib/class'
+logger = require 'logger'
 require 'entity'
 require 'map'
 require 'player'
@@ -12,16 +13,16 @@ SCREEN_WIDTH = 78
 moveKeys = {['w'] = true, ['d'] = true, ['s'] = true, ['a'] = true}
 actionKeys = {['t'] = true}
 
-map = {}
-entities = {}
-numEntities = 0
-
 function love.load()
+	logger.init()
 
 	--Setup tileset / display
 	local spriteSheet = love.graphics.newImage('cheepicus_16x16.png') 
+	logger.info("Loaded map", "INFO")
 	map = Map(SCREEN_WIDTH, SCREEN_HEIGHT, spriteSheet)
-	player = Player(38, 41, '@', ROT.Color.fromString('blue'), COLORS.YELLOW, map)
+
+	--
+	player = Player(38, 41, '@', COLORS.MAROON, COLORS.YELLOW, map)
 	mob = Entity(40, 40, 'T', COLORS.GREEN, COLORS.YELLOW, map)
 
 	--parsing the start screen file: x position, y position, character, foreground, background
@@ -47,9 +48,6 @@ function love.load()
 	end
 	gameState = 'playing'
 end
-
-function love.keypressed(k)
-end	
 
 function love.textinput(t)
 	if gameState == 'playing' then

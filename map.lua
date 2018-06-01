@@ -7,17 +7,20 @@ function Map:init(width, height, spriteSheet)
 	self.display = ROT.Display:new(width, height, 1, spriteSheet, 16, 16)
 	self.map = {}
 
-	self.map = generator.generate(width, height, 6, 10, 50, 7)
+	--generate a tunnel: width, height, tunnel length, roughness, windyness, max width, 
+	--whether to start at bottom or top 
+	local generated = generator.generateTunnel(width, height, 45, 20, 20, 10, true)
 	self.width = width
 	self.height = height
 	self.entities = {}
 	self.numEntities = 0
 	for x = 1, self.width, 1 do
+			self.map[x] = {}
 		for y = 1, self.height, 1 do
-			if self.map[x][y] == ' ' then
-				self:setTile(x, y, ' ', true, COLORS.YELLOW, COLORS.YELLOW)
-			else 
-				self:setTile(x, y, '#', false, COLORS.BROWN, COLORS.BROWN)
+				self.map[x][y] = {symbol = '\32', passable = 1, fg = COLORS.YELLOW, fg = COLORS.YELLOW}
+				self:setTile(x, y, '\32', 1, COLORS.YELLOW, COLORS.YELLOW)
+			if generated[x][y] == ' ' then
+				self:setTile(x, y, '\176', 0, COLORS.LIGHT_YELLOW, COLORS.YELLOW)
 			end
 		end
 	end
