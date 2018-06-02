@@ -20,7 +20,7 @@ function Map:init(width, height, spriteSheet)
 				self.map[x][y] = {symbol = '\32', passable = 1, fg = COLORS.YELLOW, fg = COLORS.YELLOW}
 				self:setTile(x, y, '\32', 1, COLORS.YELLOW, COLORS.YELLOW)
 			if generated[x][y] == ' ' then
-				self:setTile(x, y, '\176', 0, COLORS.LIGHT_YELLOW, COLORS.YELLOW)
+				self:setTile(x, y, '\250', 0, COLORS.LIGHT_YELLOW, COLORS.YELLOW)
 			end
 		end
 	end
@@ -44,9 +44,9 @@ end
 --checks whether a tile contains a wall or an entity
 function Map:isPassable(x, y)
 	if self.map[x][y].passable == 0 then
-		for i = 2, self.numEntities, 1 do --skip 1 because that will always be the player
+		for i = 1, self.numEntities, 1 do --skip 1 because that will always be the player
 			if x == self.entities[i].x and y == self.entities[i].y then
-				return false, self.entities[i]
+				return false 
 			else
 				return true
 			end
@@ -55,6 +55,15 @@ function Map:isPassable(x, y)
 		return false
 	end
 end
+
+function Map:getEntityAt(x, y)
+	for i = 1, self.numEntities do
+		if x == self.entities[i].x and y == self.entities[i].y then
+			return self.entities[i]
+		end
+	end
+end
+	
 
 --writes the characters to the object, not to screen
 function Map:drawMap()
@@ -70,7 +79,7 @@ function Map:drawMap()
 							self.entities[i].x, 
 							self.entities[i].y, 
 							self.entities[i].fg, 
-							self.map[self.entities[i].x][self.entities[i].y].bg)
+							self.map[self.entities[i].x][self.entities[i].y].bg)--The map's background at the entity
 	end
 end
 
