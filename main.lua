@@ -18,12 +18,11 @@ function love.load()
 
 	--Setup tileset / display
 	local spriteSheet = love.graphics.newImage('cheepicus_16x16.png') 
-	logger.info("Loaded map", "INFO")
+	logger.log("Loaded map", "INFO")
 	map = Map(SCREEN_WIDTH, SCREEN_HEIGHT, spriteSheet)
 
-	--
-	player = Player(38, 41, '@', COLORS.MAROON, COLORS.YELLOW, map)
-	mob = Entity(40, 40, 'T', COLORS.GREEN, COLORS.YELLOW, map)
+	mob = Entity(SCREEN_WIDTH/2, SCREEN_HEIGHT-3, 'T', COLORS.GREEN, COLORS.YELLOW, map)
+	player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT-1, '@', COLORS.MAROON, COLORS.YELLOW, map)
 
 	--parsing the start screen file: x position, y position, character, foreground, background
 	for line in io.lines('pyramid.csv') do
