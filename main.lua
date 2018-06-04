@@ -1,7 +1,7 @@
-ROT = require 'lib/rotLove/rot'
-COLORS = require 'colors'
-Class = require 'lib/class'
+local ROT = require 'lib/rotLove/rot'
+local COLORS = require 'colors'
 logger = require 'logger'
+local gener = require 'generator'
 require 'entity'
 require 'map'
 require 'player'
@@ -19,13 +19,20 @@ function love.load()
 	--Setup tileset / display
 	local spriteSheet = love.graphics.newImage('cheepicus_16x16.png') 
 	logger.log("Loaded map", "INFO")
-	map = Map(SCREEN_WIDTH, SCREEN_HEIGHT, spriteSheet)
+	tunnelMap = Map(SCREEN_WIDTH, SCREEN_HEIGHT, spriteSheet, true)
+	pyramidMap = Map(SCREEN_WIDTH, SCREEN_HEIGHT, spriteSheet, true)
 
-	mob = Entity(SCREEN_WIDTH/2, SCREEN_HEIGHT-3, 'T', COLORS.GREEN, COLORS.YELLOW, map)
-	player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT-1, '@', COLORS.MAROON, COLORS.YELLOW, map)
+	hero = Player:new(SCREEN_WIDTH/2, SCREEN_HEIGHT - 1, '@', COLORS.MAROON, COLORS.YELLOW, tunnelMap)
+	if not tunnelMap:isPassable(hero.x, hero.y) then
+		for x = 1, SCREEN_WIDTH do
+			if tunnelMap:isPassable(x, hero.y) then
+				hero.x = x
+			end
+		end
+	end
 
 	--parsing the start screen file: x position, y position, character, foreground, background
-	for line in io.lines('pyramid.csv') do
+	for line in io.lines('noZeropyramid.csv') do
 		local tempTile = {}
 		local i = 1
 		for word in string.gmatch(line, '([^,]+)') do
@@ -43,7 +50,11 @@ function love.load()
 		if char == '\176' or char == '\220' or char == '\214' then
 			pass = 0
 		end
-		--map:setTile(x, y, char, pass, fore, back) 
+		if y < 46 then
+			tunnelMap:setTile(x, y, char, pass, fore, back) 
+		else
+			pyramidMap:setTile(x, y, char, pass, fore, back)
+		end
 	end
 	gameState = 'playing'
 end
@@ -51,7 +62,7 @@ end
 function love.textinput(t)
 	if gameState == 'playing' then
 		if moveKeys[t] then
-			player:move(keyToDirection(t))
+			hero:move(keyToDirection(t))
 		elseif actionKeys[t] then
 			if t == 't' then
 				gameState = 'whip'
@@ -59,7 +70,7 @@ function love.textinput(t)
 		end
 	elseif gameState == 'whip' then
 		if moveKeys[t] then
-			player:whip(keyToDirection(t))
+			hero:whip(keyToDirection(t))
 			gameState = 'playing'
 		end
 	end
@@ -67,9 +78,9 @@ end
 
 function love.update(dt)	
 	--Draws characters on the virtual terminal but not the screen
-	map:drawMap()
+	tunnelMap:drawMap()
 end
 
 function love.draw() 
-	map:renderMap()
+	tunnelMap:renderMap()
 end

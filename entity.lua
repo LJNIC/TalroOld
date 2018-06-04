@@ -1,7 +1,9 @@
-Entity = Class{}
+local class = require 'middleclass'
+
+Entity = class('Person')
 
 --x position, y position, graphic, foreground, background
-function Entity:init(x, y, symbol, fg, bg, map)
+function Entity:initialize(x, y, symbol, fg, bg, map)
 	self.x = x
 	self.y = y
 	self.symbol = symbol
