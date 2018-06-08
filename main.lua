@@ -19,10 +19,10 @@ function love.load()
 	--Setup tileset / display
 	local spriteSheet = love.graphics.newImage('cheepicus_16x16.png') 
 	logger.log("Loaded map", "INFO")
-	display = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 1, spriteSheet, 16, 16, COLORS.YELLOW, COLORS.YELLOW, true)
-	tunnelMap = Map(SCREEN_WIDTH, SCREEN_HEIGHT*2, display)
+	root = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 1, spriteSheet, 16, 16, COLORS.YELLOW, COLORS.YELLOW)
+	tunnelMap = Map(SCREEN_WIDTH, SCREEN_HEIGHT*2, root)
 
-	hero = Player:new(SCREEN_WIDTH/2, 40, '@', COLORS.BLUE, COLORS.YELLOW, tunnelMap)
+	hero = Player:new(SCREEN_WIDTH/2, 80, '@', COLORS.BLUE, COLORS.YELLOW, tunnelMap)
 
 	if not tunnelMap:isPassable(hero.x, hero.y) then
 		for x = 1, SCREEN_WIDTH do
@@ -54,12 +54,15 @@ function love.load()
 		tunnelMap:setTile(x, y, char, pass, fore, back)
 	end
 	gameState = 'playing'
+	tunnelMap:moveWindow({x=0, y=40})
 end
 
 function love.textinput(t)
 	if gameState == 'playing' then
 		if moveKeys[t] then
-			hero:move(keyToDirection(t))
+			if hero:move(keyToDirection(t)) then
+				tunnelMap:moveWindow(keyToDirection(t))
+			end
 		elseif actionKeys[t] then
 			if t == 't' then
 				gameState = 'whip'

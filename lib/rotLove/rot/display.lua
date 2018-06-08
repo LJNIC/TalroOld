@@ -17,7 +17,7 @@ local Display = ROT.Class:extend("Display")
 -- @tparam[opt=9] cw tile width
 -- @tparam[opt=16] ch tile height
 -- @return nil
-function Display:init(w, h, scale, image, cw, ch, dfg, dbg, root)
+function Display:init(w, h, scale, image, cw, ch, dfg, dbg)
     self.__name = 'Display'
     self.widthInChars = w and w or 80
     self.heightInChars = h and h or 24
@@ -34,7 +34,6 @@ function Display:init(w, h, scale, image, cw, ch, dfg, dbg, root)
     self.graphics = love.graphics
     love.window.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars)
     self.drawQ = self.graphics.draw
-	self.isroot = root
 
     self.defaultForegroundColor = { 0.9215686274509803, 
 								    0.9215686274509803, 
@@ -87,13 +86,11 @@ function Display:draw()
                self.oldBackgroundColors[x][y] ~= bg or
                self.oldForegroundColors[x][y] ~= fg then
 
-				if self.isroot == true then
-               		self:_setColor(bg)
-               		self.graphics.rectangle('fill', px, py, self.charWidth, self.charHeight)
-				end
+               	self:_setColor(bg)
 
-                if c ~= 32 and c ~= 255 then
-                    local qd=self.glyphs[c]
+               	self.graphics.rectangle('fill', px, py, self.charWidth, self.charHeight)
+
+                if c ~= 32 and c ~= 255 then local qd=self.glyphs[c]
                     self:_setColor(fg)
                     self.drawQ(self.glyphSprite, qd, px, py, nil, self.scale)
                 end
@@ -185,12 +182,6 @@ function Display:clear(c, x, y, w, h, fg, bg)
     for i = 0, h-1 do
         self:_writeValidatedString(s, x, y+i, fg, bg)
     end
-end
-
---- Clear canvas.
--- runs the clear method of the Love2D canvas object being used to write to the screen
-function Display:clearCanvas()
-    self.canvas:clear()
 end
 
 --- Write.
