@@ -1,5 +1,5 @@
 require 'util'
-local class = require 'middleclass'
+local class = require 'lib/middleclass'
 logger = require 'logger'
 
 Player = class('Player', Entity)

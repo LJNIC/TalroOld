@@ -22,7 +22,7 @@ function love.load()
 	root = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 1, spriteSheet, 16, 16, COLORS.YELLOW, COLORS.YELLOW)
 	tunnelMap = Map(SCREEN_WIDTH, SCREEN_HEIGHT*2, root)
 
-	hero = Player:new(SCREEN_WIDTH/2, 80, '@', COLORS.BLUE, COLORS.YELLOW, tunnelMap)
+	hero = Player:new(SCREEN_WIDTH/2, 75, '@', COLORS.BLUE, COLORS.YELLOW, tunnelMap)
 
 	if not tunnelMap:isPassable(hero.x, hero.y) then
 		for x = 1, SCREEN_WIDTH do
@@ -55,6 +55,7 @@ function love.load()
 	end
 	gameState = 'playing'
 	tunnelMap:moveWindow({x=0, y=40})
+	local x, y = tunnelMap:getDisplayPoint(hero.x, hero.y)
 end
 
 function love.textinput(t)

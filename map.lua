@@ -1,7 +1,7 @@
 local ROT = require 'lib/rotLove/rot' 
 local COLORS = require 'colors'
 local gen = require 'generator'
-local class = require 'middleclass'
+local class = require 'lib/middleclass'
 logger = require 'logger'
 
 Map = class('Map')
@@ -37,6 +37,10 @@ function Map:setTile(x, y, symbol, passable, fg, bg)
 	self.map[x][y].passable = passable
 	self.map[x][y].fg = fg
 	self.map[x][y].bg = bg
+end
+
+function Map:shouldMove(x, y)
+	local x, y = self:getDisplayPoint(x, y)
 end
 
 --checks whether a tile contains a wall or an entity
@@ -90,6 +94,15 @@ function Map:drawMap()
 							self.entities[i].y - self.y, 
 							self.entities[i].fg, 
 							self.map[self.entities[i].x][self.entities[i].y].bg)--The map's background at the entity
+	end
+end
+
+function Map:getDisplayPoint(x, y)
+	if x < self.x + self.display.widthInChars and
+	   x > self.x and
+	   y > self.y and
+	   y < self.y + self.display.heightInChars then
+	   	return x - self.x, y - self.y
 	end
 end
 
