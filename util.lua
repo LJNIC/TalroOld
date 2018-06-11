@@ -1,3 +1,4 @@
+local util = {}
 --returns a 'vector' unit based on the key
 function keyToDirection(key)
 	if key == 'w' then
@@ -20,3 +21,9 @@ end
 function multVector(x1, y1, x2, y2)
 	return x1 * x2, y1 * y2
 end
+
+util.keyToDirection = keyToDirection
+util.addVector = addVector
+util.multVector = multVector
+
+return util
