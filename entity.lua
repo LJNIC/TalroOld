@@ -1,16 +1,16 @@
-local class = require 'lib/middleclass'
-
-Entity = class('Person')
-
+Entity = {}
 --x position, y position, graphic, foreground, background
-function Entity:initialize(x, y, symbol, fg, bg, map)
-	self.x = x
-	self.y = y
-	self.symbol = symbol
-	self.fg = fg
-	self.bg = bg
-	self.map = map
-	self.map:addEntity(self)
+function Entity:new(x, y, symbol, fg, bg, map)
+	e = {}
+	setmetatable(e, self)
+	self.__index = self
+	e.x = x
+	e.y = y
+	e.symbol = symbol
+	e.fg = fg
+	e.bg = bg
+	e.map = map
+	return e
 end
 
 function Entity:move(direction)
@@ -21,3 +21,5 @@ function Entity:move(direction)
 	end
 	return false
 end
+
+return Entity
