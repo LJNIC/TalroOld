@@ -1,4 +1,5 @@
 require 'util'
+<<<<<<< HEAD
 Entity = require 'entity'
 
 Player = {}
