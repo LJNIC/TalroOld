@@ -6,7 +6,15 @@ function init()
 	if file == nil then
 		os.execute("mkdir " .. "logs")
 	end
-	local filename = "logs/" .. tostring(os.date("%d-%m-%Y[%R]")) .. ".log"
+
+	local count = 1
+	for _, file in pairs(love.filesystem.getDirectoryItems("logs/")) do
+		if string.gmatch(file, os.date("%d-%m-%Y")) then
+			count = count + 1
+		end
+	end
+
+	local filename = "logs/" .. tostring(os.date("%d-%m-%Y")) .. "-" .. count .. ".log"
 	logger.logFile = io.open(filename, "w")
 	log("Log starting...", "INFO")
 end
