@@ -44,13 +44,10 @@ end
 function Map:isPassable(x, y)
 	if x > self.width or x < 1
 	   or y > self.height or y < 1 then
-	   Logger.log('Point is off the map')
 	   return false
 	end
 	if self.map[x][y].passable == 0 then
 		for i = 1, self.numEntities, 1 do --skip 1 because that will always be the player
-			Logger.log("Entity " .. i .. " " .. self.entities[i].x, "DEBUG")
-			Logger.log("Entity " .. i .. " " .. self.entities[i].y, "DEBUG")
 			if x == self.entities[i].x and y == self.entities[i].y then
 				return false 
 			end
@@ -121,8 +118,20 @@ function Map:renderMap()
 end
 
 function Map:addEntity(entity)
+	assert(type(entity) == 'table' and entity.uuid, "Not an entity!")
 	self.entities[self.numEntities + 1] = entity
 	self.numEntities = self.numEntities + 1
 end	
+
+function Map:removeEntity(entity)
+	assert(type(entity) == 'table' and entity.uuid, "Not an entity!")
+	for i = 1, self.numEntities do
+		if self.entities[i].uuid == entity.uuid then
+			self.entities[i] = nil
+			self.numEntities = self.numEntities - 1
+
+		end
+	end
+end
 
 return Map

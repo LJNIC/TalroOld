@@ -5,14 +5,15 @@ function play:init()
 	actionKeys = {['t'] = true}
 	--Setup tileset / display
 	local spriteSheet = love.graphics.newImage('cheepicus_16x16.png') 
-	logger.log("Loaded map", "INFO")
+	logger.disable(2)
+	logger.log("Loaded map", 1)
 	root = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 1, spriteSheet, 16, 16, COLORS.YELLOW, COLORS.YELLOW)
 	tunnelMap = Map:new(SCREEN_WIDTH, SCREEN_HEIGHT*2, root)
 
 	hero = Player:new(37, 75, '@', COLORS.BLUE, COLORS.YELLOW, tunnelMap)
 	tunnelMap:addEntity(hero)
 
-	monster = Entity:new(39, 75, 'T', COLORS.MAROON, COLORS.YELLOW, tunnelMap)
+	monster = Mummy:new(39, 75, 'T', COLORS.MAROON, COLORS.YELLOW, tunnelMap)
 	tunnelMap:addEntity(monster)
 	
 	if not tunnelMap:isPassable(hero.x, hero.y) then

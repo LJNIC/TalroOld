@@ -1,4 +1,5 @@
 ROT = require 'lib/rotLove/rot'
+UUID = require 'lib/uuid'
 Generator = require 'generator'
 COLORS = require 'colors'
 Logger = require 'logger'
@@ -7,14 +8,18 @@ PlayState = require 'states/play'
 WhipState = require 'states/playwhip'
 Util = require 'util'
 Entity = require 'entity'
+Mummy = require 'mummy'
 Map = require 'map'
 Player = require 'player'
+
+UUID.seed()
 
 SCREEN_HEIGHT = 45
 SCREEN_WIDTH = 78
 
 moveKeys = {['w'] = true, ['d'] = true, ['s'] = true, ['a'] = true}
 actionKeys = {['t'] = true}
+
 
 function love.load()
 	Logger.init()
