@@ -17,6 +17,7 @@ function Map:new(width, height, display)
 				m.map[x][y] = {symbol = '\32', passable = 1, fg = COLORS.YELLOW, fg = COLORS.YELLOW}
 		end
 	end
+
 	setmetatable(m, self)
 	self.__index = self
 	return m
@@ -43,16 +44,18 @@ end
 function Map:isPassable(x, y)
 	if x > self.width or x < 1
 	   or y > self.height or y < 1 then
+	   Logger.log('Point is off the map')
 	   return false
 	end
 	if self.map[x][y].passable == 0 then
 		for i = 1, self.numEntities, 1 do --skip 1 because that will always be the player
+			Logger.log("Entity " .. i .. " " .. self.entities[i].x, "DEBUG")
+			Logger.log("Entity " .. i .. " " .. self.entities[i].y, "DEBUG")
 			if x == self.entities[i].x and y == self.entities[i].y then
 				return false 
-			else
-				return true
 			end
 		end
+		return true
 	else
 		return false
 	end
