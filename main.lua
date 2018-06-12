@@ -1,16 +1,16 @@
 ROT = require 'lib/rotLove/rot'
 UUID = require 'lib/uuid'
 Generator = require 'generator'
-COLORS = require 'colors'
+COLORS = require 'util/colors'
 Logger = require 'logger'
 Gamestate = require 'lib/gamestate'
 PlayState = require 'states/play'
 WhipState = require 'states/playwhip'
-Util = require 'util'
-Entity = require 'entity'
-Mummy = require 'mummy'
+Util = require 'util/util'
+Entity = require 'entities/entity'
+Mummy = require 'entities/mummy'
 Map = require 'map'
-Player = require 'player'
+Player = require 'entities/player'
 
 UUID.seed()
 

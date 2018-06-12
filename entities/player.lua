@@ -1,4 +1,3 @@
-Entity = require 'entity'
 Player = {}
 
 function Player:new(x, y, symbol, fg, bg, map)
