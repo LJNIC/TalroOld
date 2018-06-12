@@ -3,8 +3,9 @@ Player = {}
 
 function Player:new(x, y, symbol, fg, bg, map)
 	p = Entity:new(x, y, symbol, fg, bg, map)
-	setmetatable(p, Entity)
 	p.whip = self.whip
+	p.type = 'player'
+	p.onCollide = self.onCollide
 	return p
 end
 
@@ -22,5 +23,12 @@ function Player:whip(direction)
 		end
 	end
 end
+
+function Player:onCollide(other)
+	if other.type == 'mummy' then
+		self.map:removeEntity(other)
+	end
+end
+	
 
 return Player
