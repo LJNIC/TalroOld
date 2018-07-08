@@ -1,3 +1,9 @@
+--[[
+The map keeps track of the entities, walls, obstacles etc in the game.
+Entities are stored as a list of uuid, entity pairs.
+The map can be moved around and drawn from different points.
+The map's display is controlled by rotLove's display class.
+--]]
 Map = {}
 
 function Map:new(width, height, display)
@@ -99,6 +105,21 @@ function Map:drawMap()
 	end
 end
 
+--Draws a CSV file at the given points and which characters are passable
+function Map:drawCSV(x, y, csvfile, passables)
+	local tiles = Util.parseCSV(csvfile)
+	for _,tile in pairs(tiles) do
+		local pass = 1
+		for _, character in pairs(passables) do
+			if tile.char == character then
+				pass = 0
+			end
+		end
+		self:setTile(tile.x + x - 1, tile.y + y-1, tile.char, pass, tile.fore, tile.back)
+	end
+	self:drawMap()
+end
+
 --Returns the x and y translated to its actual display position
 function Map:getDisplayPoint(x, y)
 	if x < self.x + self.display.widthInChars and
@@ -133,6 +154,7 @@ function Map:addEntity(entity)
 	self.entities[entity.uuid] = entity
 end	
 
+--Removes the entity from the map if it matches a uuid
 function Map:removeEntity(entity)
 	assert(type(entity) == 'table' and entity.uuid, "Not an entity!")
 	for uuid in pairs(self.entities) do
