@@ -1,6 +1,13 @@
-## A LOVE Roguelike, with some help from rotLove. Still in early development.
-Expected features:
+## A LÖVE Roguelike. Still in early development.
+
+### Expected features
 * A generated pyramid to explore.
 * Some destructible terrain.
 * Interesting item options.
+
+### Libraries used
+* [rotLove](https://github.com/paulofmandown/rotLove), with some modifications
+* [hump.gamestate](https://github.com/vrld/hump)
+
+### And a sneak peek
 ![alt text](https://github.com/LJNIC/Talro/blob/master/pyramid.png)
