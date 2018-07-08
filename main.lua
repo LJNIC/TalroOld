@@ -1,6 +1,5 @@
 ROT = require 'lib/rotLove/rot'
 UUID = require 'lib/uuid'
-Generator = require 'generator'
 COLORS = require 'util/colors'
 Logger = require 'logger'
 Gamestate = require 'lib/gamestate'

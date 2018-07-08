@@ -25,7 +25,7 @@ function play:init()
 	end
 
 	--parsing the start screen file: x position, y position, character, foreground, background
-	for line in io.lines('pyramid.csv') do
+	for line in love.filesystem.lines('pyramid.csv') do
 		local tempTile = {}
 		local i = 1
 		for word in string.gmatch(line, '([^,]+)') do

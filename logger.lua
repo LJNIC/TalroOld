@@ -2,9 +2,9 @@ logger = {}
 logger.levels = {"INFO", "ERROR", "DEBUG"}
 
 function init()
-	local file = io.open("logs/") 
+	local file = io.open("Talro-logs/") 
 	if file == nil then
-		os.execute("mkdir " .. "logs")
+		os.execute("mkdir " .. "Talro-logs")
 	end
 
 	local count = 1
@@ -14,7 +14,7 @@ function init()
 		end
 	end
 
-	local filename = "logs/" .. tostring(os.date("%d-%m-%Y")) .. "-" .. count .. ".log"
+	local filename = "Talro-logs/" .. tostring(os.date("%d-%m-%Y")) .. "-" .. count .. ".log"
 	logger.logFile = io.open(filename, "w")
 	log("Log starting...", 1)
 end
