@@ -99,7 +99,7 @@ local function listItem(list, item)
 end
 
 -- (Internal) Requests adjacent map values around the given node.
-local function getAdjacent(width, height, node, positionIsOpenFunc)
+local function getAdjacent(width, height, node, positionIsOpenFunc, useDiagonal)
 
     local result = { }
 
@@ -108,12 +108,13 @@ local function getAdjacent(width, height, node, positionIsOpenFunc)
         { x = -1, y = 0 },  -- left
         { x = 0, y = 1 },   -- bottom
         { x = 1, y = 0 },   -- right
-        -- include diagonal movements
-        { x = -1, y = -1 },   -- top left
-        { x = 1, y = -1 },   -- top right
-        { x = -1, y = 1 },   -- bot left
-        { x = 1, y = 1 },   -- bot right
     }
+	if useDiagonal then
+		table.insert(positions, {x = -1, y = -1})
+		table.insert(positions, {x = 1, y = -1})
+		table.insert(positions, {x = -1, y = 1})
+		table.insert(positions, {x = 1, y = 1})
+	end
 
     for _, point in ipairs(positions) do
         local px = clamp(node.x + point.x, 1, width)
@@ -129,7 +130,7 @@ local function getAdjacent(width, height, node, positionIsOpenFunc)
 end
 
 -- Returns the path from start to goal, or false if no path exists.
-function module:find(width, height, start, goal, positionIsOpenFunc, useCache)
+function module:find(width, height, start, goal, positionIsOpenFunc, useCache, orth)
     if useCache then
         local cachedPath = getCached(start, goal)
         if cachedPath then
@@ -137,6 +138,7 @@ function module:find(width, height, start, goal, positionIsOpenFunc, useCache)
         end
     end
 
+	local useDiagonal = orth or false
     local success = false
     local open = { }
     local closed = { }
@@ -160,7 +162,7 @@ function module:find(width, height, start, goal, positionIsOpenFunc, useCache)
 
         if not success then
 
-            local adjacentList = getAdjacent(width, height, current, positionIsOpenFunc)
+            local adjacentList = getAdjacent(width, height, current, positionIsOpenFunc, useDiagonal)
 
             for _, adjacent in ipairs(adjacentList) do
 

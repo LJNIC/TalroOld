@@ -1,6 +1,6 @@
-local intro = {}
+local play = {}
 
-function intro:init()
+function play:init()
 	
 	local spriteSheet = love.graphics.newImage('tilesheet_15x15.png') 
 	spriteSheet:setFilter('nearest', 'nearest')
@@ -14,7 +14,7 @@ function intro:init()
 	Logger.log("Loaded maps...", 1)
 
 	--Digger map callback function
-	calbak = function(x, y, val)
+	local calbak = function(x, y, val)
 		local char = ' '
 		if val == 0 then 
 			introMap:setTile(x, y, TileTypes.Floor)
@@ -24,10 +24,10 @@ function intro:init()
 	end
 
 	hero = Player:new(20, 20, '\35', COLORS.GREEN, COLORS.YELLOW, introMap)
-	bat = Mummy:new(21, 21, '\38', COLORS.BROWN, COLORS.YELLOW, introMap)
+	local bat = Mummy:new(21, 21, '\33', COLORS.WHITE, COLORS.YELLOW, introMap)
 
 	--FOV light callback
-	lightCalbak = function(fov, x, y)
+	local lightCalbak = function(fov, x, y)
 		return hero.map:isPassable(x, y)
 	end
 
@@ -59,25 +59,17 @@ function fovCalbak(x, y, r, v)
 	hero.map:visible(x, y)
 end
 
-function intro:keypressed(key, scancode, isrepeat)
-	if key == 'up' then
-		--hero:move({x=0, y=-1})
-	elseif key == 'right' then
-		--hero:move({x=1, y=0})
-	end
-end
-
-function intro:textinput(t)
+function play:keypressed(key, scancode, isrepeat)
 	local acted = false
-	if moveKeys[t] then
-		local direction = Util.keyToDirection(t)
+	if moveKeys[key] then
+		local direction = Util.keyToDirection(key)
 		if hero:move(direction) then
 			if hero:shouldMove(direction) then hero.map:move(direction) end
 			acted = true
 		end
-	elseif actionKeys[t] then
+	elseif actionKeys[key] then
 		if t == 't' then
-			Gamestate.switch(WhipState, hero, moveKeys)
+			Gamestate.switch(WhipState, hero)
 			return
 		end
 	end
@@ -88,13 +80,13 @@ function intro:textinput(t)
 	end
 end
 
-function intro:draw()
+function play:draw()
 	introMap:renderMap()
 end
 
-function intro:update(dt)
+function play:update(dt)
 	introMap:visible(hero.x, hero.y)
 	introMap:drawMap()
 end
 
-return intro
+return play 

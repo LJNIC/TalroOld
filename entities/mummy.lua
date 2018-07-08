@@ -11,7 +11,8 @@ function Mummy:new(x, y, symbol, fg, bg, map)
 	m.turn = true
 	m.lastpath = nil
 	m.pathcount = 0
-	m.grab = 4
+	m.range = 5
+	m.grab = self.grab
 	return m
 end
 
@@ -23,19 +24,19 @@ function Mummy:ai()
 		--Check if player is within range to grab and grab them if they are
 		local dx = player.x - self.x
 		local dy = player.y - self.y
-		if dx == 0 and math.abs(dy) < self.grab then
+		if dx == 0 and math.abs(dy) < self.range then
 			self:grab({x=0, y = (dy > 0) and 1 or -1})
 			self.turn = not self.turn
 			return
-		elseif dy == 0 and math.abs(dx) < self.grab then
+		elseif dy == 0 and math.abs(dx) < self.range then
 			self:grab({x = (dx > 0) and 1 or -1, y=0})
 			self.turn = not self.turn
 			return
 		end
 
 		self.pathcount = 0	
-		local self.lastpath = AStar:find(self.map.width, self.map.height, self, player, 
-			function(x, y) return self.map.map[x][y].tile.passable == 0 end)
+		self.lastpath = AStar:find(self.map.width, self.map.height, self, player, 
+			function(x, y) return self.map.map[x][y].tile.passable == 0 end, false)
 
 		--Get the second tile in the path because the first is the mummy
 		local to = self.lastpath[2]
@@ -43,7 +44,7 @@ function Mummy:ai()
 		self:move({x = to.x - self.x, y = to.y - self.y})
 	elseif self.turn then
 		--If the player is out of view but the mummy hasn't reached their last location, continue on it
-		if self.pathcount < #self.lastpath then
+		if self.lastpath and self.pathcount + 2 < #self.lastpath then
 			local to = self.lastpath[2 + self.pathcount]
 			self.pathcount = self.pathcount + 1
 			self:move({x = to.x - self.x, y = to.y - self.y})
@@ -69,6 +70,7 @@ function Mummy:grab(direction)
 				entity.y = self.y + direction.y
 				return
 			end
+			return
 		end
 	end
 end

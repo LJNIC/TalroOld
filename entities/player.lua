@@ -16,16 +16,20 @@ function Player:whip(direction)
 		if not self.map:isPassable(self.x + dx, self.y + dy) then
 			local entity = self.map:getEntityAt(self.x + dx, self.y + dy)
 			if entity and entity.type ~= 'door' then 
+				if entity.type == 'bat' then
+					--TODO: Latch onto bat
+					table.insert(self.status, 'flying')
+				end
 				entity.x = self.x + direction.x
 				entity.y = self.y + direction.y
 				return
 			end
+			return
 		end
 	end
 end
 
 function Player:shouldMove(direction)
-	--TODO: Check if player is close enough to edge of display to move the map
 	point = self.map:getDisplayPoint(self.x, self.y)
 	if direction.x ~= 0 then
 		if direction.x > 0 then

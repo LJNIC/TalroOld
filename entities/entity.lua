@@ -11,6 +11,7 @@ function Entity:new(x, y, symbol, fg, bg, map)
 	e.bg = bg
 	e.map = map
 	e.uuid = UUID()
+	e.status = {}
 	return e
 end
 

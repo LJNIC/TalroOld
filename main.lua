@@ -1,3 +1,4 @@
+--Global libraries/utilities/classes
 ROT = require 'lib/rotLove/rot'
 UUID = require 'lib/uuid'
 COLORS = require 'util/colors'
@@ -6,7 +7,6 @@ Logger = require 'logger'
 Gamestate = require 'lib/gamestate'
 PlayState = require 'states/play'
 WhipState = require 'states/playwhip'
-FloorOneState = require 'states/floorone'
 Util = require 'util/util'
 Entity = require 'entities/entity'
 Mummy = require 'entities/mummy'
