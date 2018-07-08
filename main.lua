@@ -7,6 +7,7 @@ Logger = require 'logger'
 Gamestate = require 'lib/gamestate'
 PlayState = require 'states/play'
 WhipState = require 'states/playwhip'
+MenuState = require 'states/menu'
 Util = require 'util/util'
 Entity = require 'entities/entity'
 Mummy = require 'entities/mummy'
@@ -17,21 +18,21 @@ Bat = require 'entities/bat'
 AStar = require 'lib/lua-star'
 Serpent = require 'lib/serpent'
 Options = require 'options'
+GUI = require 'lib/Gspot'
 
 --Loads options 
 Options:loadOptions()
-print(Options.options.actions.whip[1])
 
 --Seeds the uuid creator for entities
 UUID.seed()
 
 SCREEN_HEIGHT = 22
-SCREEN_WIDTH = 35
+SCREEN_WIDTH = 37
 
 function love.load()
 	love.keyboard.setKeyRepeat(true)
 	Logger.init()
-	Gamestate.switch(PlayState)
+	Gamestate.switch(MenuState)
 end
 
 function love.textinput(t)
@@ -40,6 +41,14 @@ end
 
 function love.keypressed(key, scancode, isrepeat)
 	Gamestate.keypressed(key)
+end
+
+function love.mousepressed(x, y, button)
+	Gamestate.mousepressed(x, y, button)
+end
+
+function love.mousereleased(x, y, button)
+	Gamestate.mousereleased(x, y, button)
 end
 
 function love.update(dt)	

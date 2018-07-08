@@ -3,4 +3,3 @@ function love.conf(t)
 	t.modules.physics = false
 	t.modules.touch = false
 end
-	

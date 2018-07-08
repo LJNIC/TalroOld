@@ -26,7 +26,7 @@ function Options:loadOptions()
 	end
 	
 	err, self.options = Util.loadTable('options.conf')
-	if err then 
+	if not err then 
 		self.generateDefaults()
 		err, self.options = Util.loadTable('options.conf')
 	end
