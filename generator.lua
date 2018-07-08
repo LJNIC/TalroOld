@@ -1,4 +1,4 @@
-local generator = {}
+local Generator = {}
 function generateTunnel(width, height, length, roughness, windyness, maxWidth, startAtBottom)
 	map = {}
 	for x = 1, width, 1 do
@@ -7,18 +7,25 @@ function generateTunnel(width, height, length, roughness, windyness, maxWidth, s
 			map[x][y] = '#'
 		end
 	end
-	local tunnelWidth = 5
+
+	local tunnelWidth = 5 --starting width
 	local x = math.floor((width/2) - (tunnelWidth/2)) --start x at center
 
-	local y = 2 
+	local y = 1
 	local currentLength = 0
-	if startAtBottom == true then
-		y = height - 1 - length
+
+	if startAtBottom then --if starting at bottom, start at the other end
+		y = height - length + 1
 	end
+
+	--write the first line of the tunnel	
 	for i = 1, tunnelWidth, 1 do
-		map[x + i][y] = '.'
+		map[x + i][y] = ' '
 	end
+
+	
 	math.randomseed(os.time())
+	--move up one
 	y = y + 1
 	while currentLength <= length + 1 do
 		if math.random(100) <= roughness then
@@ -61,5 +68,7 @@ function generateTunnel(width, height, length, roughness, windyness, maxWidth, s
 	end 	
 	return map
 end	
-generator.generateTunnel = generateTunnel
-return generator
+
+Generator.generateTunnel = generateTunnel
+
+return Generator

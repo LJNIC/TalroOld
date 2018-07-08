@@ -1,15 +1,17 @@
-ROT = require 'lib/rotLove/rot' 
-COLORS = require 'colors'
-generator = require 'generator'
-Map = Class{}
+local ROT = require 'lib/rotLove/rot' 
+local COLORS = require 'colors'
+local gen = require 'generator'
+local class = require 'middleclass'
+logger = require 'logger'
 
-function Map:init(width, height, spriteSheet)
-	self.display = ROT.Display:new(width, height, 1, spriteSheet, 16, 16)
+Map = class('Map')
+
+function Map:initialize(width, height, display)
+	self.display = ROT.Display:new(width, height, 1, spriteSheet, 16, 16, COLORS.YELLOW, COLORS.YELLOW, root)
 	self.map = {}
-
+	self.root = root
 	--generate a tunnel: width, height, tunnel length, roughness, windyness, max width, 
 	--whether to start at bottom or top 
-	local generated = generator.generateTunnel(width, height, 45, 20, 20, 10, true)
 	self.width = width
 	self.height = height
 	self.entities = {}
@@ -18,10 +20,6 @@ function Map:init(width, height, spriteSheet)
 			self.map[x] = {}
 		for y = 1, self.height, 1 do
 				self.map[x][y] = {symbol = '\32', passable = 1, fg = COLORS.YELLOW, fg = COLORS.YELLOW}
-				self:setTile(x, y, '\32', 1, COLORS.YELLOW, COLORS.YELLOW)
-			if generated[x][y] == ' ' then
-				self:setTile(x, y, '\250', 0, COLORS.LIGHT_YELLOW, COLORS.YELLOW)
-			end
 		end
 	end
 				
@@ -68,7 +66,7 @@ end
 --writes the characters to the object, not to screen
 function Map:drawMap()
 	--write the terrain
-	for x = 1, self.width, 1 do
+	for x = 1, self.width do
 		for y = 1, self.height, 1 do
 			self.display:write(self.map[x][y].symbol, x, y, self.map[x][y].fg, self.map[x][y].bg)
 		end
