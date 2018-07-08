@@ -1,7 +1,7 @@
 local playwhip = {}
 
 function playwhip:textinput(t)
-	if self.moveKeys[t] then
+	if moveKeys[t] then
 		hero:whip(keyToDirection(t))
 		Gamestate.switch(PlayState)
 		hero.map:resetFOV()
@@ -9,9 +9,8 @@ function playwhip:textinput(t)
 	end	
 end
 
-function playwhip:enter(previous, hero, moveKeys)
+function playwhip:enter(previous, hero)
 	hero = hero
-	self.moveKeys = moveKeys
 end
 
 function playwhip:update(dt)

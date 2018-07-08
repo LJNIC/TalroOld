@@ -40,7 +40,20 @@ function parseCSV(csvfile)
 	return values
 end
 	
-	
+function generateDefaults()
+	local options = {
+	movement = {
+		up = {'up', 'k'},
+		down = {'down', 'j'},
+		right = {'l', 'right'},
+		left = {'h', 'left'}
+		}
+	}
+	local file = io.open('options', 'w')
+	file:write(Serpent.block(options, {comment = false}))
+	file:close()
+end
+				
 
 --add two vectors
 function addVector(x1, y1, x2, y2)
@@ -52,6 +65,7 @@ function multVector(x1, y1, x2, y2)
 	return x1 * x2, y1 * y2
 end
 
+util.generateDefaults = generateDefaults
 util.parseCSV = parseCSV
 util.keyToDirection = keyToDirection
 util.addVector = addVector

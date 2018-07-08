@@ -1,8 +1,6 @@
 local intro = {}
 
 function intro:init()
-	moveKeys = {['w'] = true, ['d'] = true, ['s'] = true, ['a'] = true}
-	actionKeys = {['t'] = true}
 	
 	local spriteSheet = love.graphics.newImage('tilesheet_15x15.png') 
 	spriteSheet:setFilter('nearest', 'nearest')
