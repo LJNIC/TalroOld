@@ -1,9 +1,9 @@
 Menu = {}
 
 function Menu:enter()
-	local spriteSheet = love.graphics.newImage('assets/cheepicus_16x16.png')
+	local spriteSheet = love.graphics.newImage('assets/tilesheet_15x15.png')
 	spriteSheet:setFilter('nearest', 'nearest')
-	menuRoot = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 2, COLORS.YELLOW, COLORS.DARKEST, nil, spriteSheet, 16, 16)
+	menuRoot = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 2, COLORS.YELLOW, COLORS.DARKEST, nil, spriteSheet, 15, 15)
 	menuRoot:write('\201')	
 	menuRoot:write('\187', SCREEN_WIDTH, 1)
 	menuRoot:write('\200', 1, SCREEN_HEIGHT)

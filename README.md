@@ -12,3 +12,9 @@
 
 ### Special thanks
 * [MCNoodlor](https://twitter.com/mcnoodlor) for some of his tiles 
+
+### A sneak peak
+
+![Game](screenshots/game.png)
+
+![Menu](screenshots/menu.png)

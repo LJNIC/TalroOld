@@ -21,7 +21,7 @@ function play:init()
 		end
 	end
 
-	hero = Player:new(20, 20, '\34', COLORS.GREEN, COLORS.YELLOW, introMap)
+	hero = Player:new(20, 20, '\41', COLORS.BLUE, COLORS.YELLOW, introMap)
 	local bat = Mummy:new(21, 21, '\33', COLORS.WHITE, COLORS.YELLOW, introMap)
 
 	--FOV light callback
