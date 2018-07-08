@@ -1,5 +1,5 @@
 logger = {}
-logger.levels = {["INFO"]=true, ["ERROR"]=true}
+logger.levels = {["INFO"]=true, ["ERROR"]=true, ["DEBUG"]=true}
 
 function init()
 	local file = io.open("logs/") 
@@ -13,11 +13,11 @@ end
 
 function log(message, level)
 	if logger.levels[level] == false then
-		print("Invalid logger level!")
+		print(level .. " level is disabled.")
 		return
 	end
 
-	if logger.logFile == nil then
+	if not logger.logFile then
 		print("Logger not initialized!")
 		return
 	end
@@ -26,7 +26,36 @@ function log(message, level)
 	logger.logFile:write(logMessage)
 end
 
+function disable(level)
+	if not logger.logFile then
+		print("Logger not initialized!")
+		return
+	end
+
+	if logger.levels[level] then
+		logger.levels[level] = false
+	end
+end
+
+function enable(level)
+	if not logger.logFile then
+		print("Logger not initialized!")
+		return
+	end
+
+	if logger.levels[level] == nil then
+		print("Invalid logger lvel: " .. level)
+		return
+	end
+
+	if not logger.levels[level] then
+		logger.levels[level] = true
+	end
+end
+		
 
 logger.init = init
-logger.info = log
+logger.log = log
+logger.disable = disable
+logger.enable = enable
 return logger
