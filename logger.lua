@@ -8,7 +8,7 @@ function init()
 	end
 
 	local count = 1
-	for _, file in pairs(love.filesystem.getDirectoryItems("logs/")) do
+	for _, file in pairs(love.filesystem.getDirectoryItems("Talro-logs/")) do
 		if string.gmatch(file, os.date("%d-%m-%Y")) then
 			count = count + 1
 		end

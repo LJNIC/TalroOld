@@ -26,6 +26,8 @@ end
 function Player:onCollide(other)
 	if other.type == 'mummy' then
 		self.map:removeEntity(other)
+	elseif other.type == 'door' then
+		Gamestate.switch(Floor1)
 	end
 end
 	

@@ -3,7 +3,7 @@ local playwhip = {}
 function playwhip:textinput(t)
 	if self.moveKeys[t] then
 		hero:whip(keyToDirection(t))
-		Gamestate.switch(PlayState)
+		Gamestate.switch(IntroState)
 	end	
 end
 

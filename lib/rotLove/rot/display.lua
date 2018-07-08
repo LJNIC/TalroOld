@@ -14,16 +14,16 @@ local Display = ROT.Class:extend("Display")
 -- @tparam[opt] table dfg Default foreground color as a table defined as {r,g,b,a}
 -- @tparam[opt] table dbg Default background color
 -- @tparam[opt=false] boolean fullOrFlags In Love 0.8.0: Use fullscreen In Love 0.9.0: a table defined for love.graphics.setMode
--- @tparam[opt=9] cw tile width
+-- @tparam[opt=9] int cw if you provide a
 -- @tparam[opt=16] ch tile height
 -- @return nil
-function Display:init(w, h, scale, image, cw, ch, dfg, dbg)
+function Display:init(w, h, scale, dfg, dbg)
     self.__name = 'Display'
     self.widthInChars = w and w or 80
     self.heightInChars = h and h or 24
     self.scale = scale or 1
-    self.charWidth = cw*self.scale
-    self.charHeight = ch*self.scale
+    self.charWidth = cw * self.scale or 9 * self.scale
+    self.charHeight = ch * self.scale or 16 * self.scale
     self.glyphs = {}
     self.chars = {{}}
     self.backgroundColors = {{}}
