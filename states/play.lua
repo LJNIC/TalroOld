@@ -61,13 +61,13 @@ end
 
 function play:keypressed(key, scancode, isrepeat)
 	local acted = false
-	if moveKeys[key] then
+	if Options.moveKeys[key] then
 		local direction = Util.keyToDirection(key)
 		if hero:move(direction) then
 			if hero:shouldMove(direction) then hero.map:move(direction) end
 			acted = true
 		end
-	elseif actionKeys[key] then
+	elseif Options.actionKeys[key] then
 		Gamestate.switch(Util.keyToAction(key), hero)
 		return
 	end

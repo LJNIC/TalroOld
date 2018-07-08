@@ -16,28 +16,9 @@ Player = require 'entities/player'
 Bat = require 'entities/bat'
 AStar = require 'lib/lua-star'
 Serpent = require 'lib/serpent'
+Options = require 'options'
 
-optionsFile = io.open('options.conf', 'r')
-if optionsFile == nil then
-	Util.generateDefaults()
-end
-
-err, options = Util.loadTable('options.conf')
-if err then 
-	Util.generateDefaults()
-	err, options = Util.loadTable('options.conf')
-end
-
-moveKeys = {}
-for _,keys in pairs(options.movement) do
-	moveKeys[keys[1]] = true
-	moveKeys[keys[2]] = true	
-end	
-
-actionKeys = {}
-for _,keys in pairs(options.actions) do
-	actionKeys[keys[1]] = true
-end
+Options:loadOptions()
 
 --Seeds the uuid creator for entities
 UUID.seed()
