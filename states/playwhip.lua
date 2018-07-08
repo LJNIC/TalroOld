@@ -7,18 +7,17 @@ function playwhip:textinput(t)
 	end	
 end
 
-function playwhip:enter(previous, map, hero, moveKeys)
-	self.hero = hero
-	self.map = map
+function playwhip:enter(previous, hero, moveKeys)
+	hero = hero
 	self.moveKeys = moveKeys
 end
 
 function playwhip:update(dt)
-	self.map:drawMap()
+	hero.map:drawMap()
 end
 
 function playwhip:draw()
-	self.map:renderMap()
+	hero.map:renderMap()
 end
 
 return playwhip

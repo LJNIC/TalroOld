@@ -14,7 +14,7 @@ function Player:whip(direction)
 		dx, dy = Util.multVector(direction.x, direction.y, i, i)
 		if not self.map:isPassable(self.x + dx, self.y + dy) then
 			local entity = self.map:getEntityAt(self.x + dx, self.y + dy)
-			if entity ~= nil then 
+			if entity and entity.type ~= 'door' then 
 				entity.x = self.x + direction.x
 				entity.y = self.y + direction.y
 				return
