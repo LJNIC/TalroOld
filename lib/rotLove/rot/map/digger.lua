@@ -36,9 +36,13 @@ function Digger:init(width, height, options)
         end
     end
 
+	if options.firstRoom then
+		self._options.firstRoom = options.firstRoom
+	end
+
     self._features={Room=4, Corridor=4}
     if self._options.nocorridorsmode then
-        self._features.Corridor=nil
+        self._features.Corridor = nil
     end
     self._featureAttempts=20
     self._walls={}
@@ -62,9 +66,9 @@ function Digger:create(callback)
     self:_firstRoom()
 
     local t1=os.clock()*1000
-    local priorityWalls=0
+    local priorityWalls = 0
     repeat
-        local t2=os.clock()*1000
+        local t2 = os.clock()*1000
         if t2-t1>self._options.timeLimit then break end
 
         local wall=self:_findWall()
@@ -74,7 +78,7 @@ function Digger:create(callback)
         local y    = wall.y
         local dir  =self:_getDiggingDirection(x, y)
         if dir then
-            local featureAttempts=0
+            local featureAttempts = 0
             repeat
                 featureAttempts=featureAttempts+1
                 if self:_tryFeature(x, y, dir[1], dir[2]) then
@@ -105,21 +109,21 @@ function Digger:create(callback)
 end
 
 function Digger:_digCallback(x, y, value)
-    if value==0 or value==2 then
-        self._map[x][y]=0
-        self._dug=self._dug+1
+    if value == 0 or value == 2 then
+        self._map[x][y] = 0
+        self._dug = self._dug+1
     else
         self:setWall(x, y, 1)
     end
 end
 
 function Digger:_isWallCallback(x, y)
-    if x<1 or y<1 or x>self._width or y>self._height then return false end
+    if x < 1 or y < 1 or x > self._width or y > self._height then return false end
     return self._map[x][y]==1
 end
 
 function Digger:_canBeDugCallback(x, y)
-    if x<2 or y<2 or x>=self._width or y>=self._height then return false end
+    if x < 2 or y < 2 or x >= self._width or y >= self._height then return false end
     return self._map[x][y]==1
 end
 
@@ -130,7 +134,13 @@ end
 function Digger:_firstRoom()
     local cx  =math.floor(self._width/2)
     local cy  =math.floor(self._height/2)
-    local room=ROT.Map.Room:new():createRandomCenter(cx, cy, self._options, self._rng)
+
+	if self._options.firstRoom then
+		cx = self._options.firstRoom[1]
+		cy = self._options.firstRoom[2]
+	end
+
+	local room=ROT.Map.Room:new():createRandomCenter(cx, cy, self._options, self._rng)
     table.insert(self._rooms, room)
     room:create(self._digCallback)
 end
@@ -143,8 +153,8 @@ function Digger:_findWall()
         if wall.value > 1 then prio2[#prio2 + 1] = wall
         else prio1[#prio1 + 1] = wall end
     end
-    local arr=#prio2>0 and prio2 or prio1
-    if #arr<1 then return nil end
+    local arr = #prio2 > 0 and prio2 or prio1
+    if #arr < 1 then return nil end
     local wall = table.random(arr)
     self:setWall(wall.x, wall.y, nil)
     return wall
