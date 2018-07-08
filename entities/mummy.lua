@@ -74,6 +74,5 @@ function Mummy:grab(direction)
 		end
 	end
 end
-	
 
 return Mummy
