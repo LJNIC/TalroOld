@@ -7,9 +7,10 @@ function play:init()
 	local spriteSheet = love.graphics.newImage('cheepicus_16x16.png') 
 	logger.log("Loaded map", "INFO")
 	root = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 1, spriteSheet, 16, 16, COLORS.YELLOW, COLORS.YELLOW)
-	tunnelMap = Map(SCREEN_WIDTH, SCREEN_HEIGHT*2, root)
+	tunnelMap = Map:new(SCREEN_WIDTH, SCREEN_HEIGHT*2, root)
 
 	hero = Player:new(37, 75, '@', COLORS.BLUE, COLORS.YELLOW, tunnelMap)
+	tunnelMap:addEntity(hero)
 	
 	if not tunnelMap:isPassable(hero.x, hero.y) then
 		for x = 1, SCREEN_WIDTH do

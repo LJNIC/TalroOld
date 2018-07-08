@@ -1,14 +1,14 @@
 ROT = require 'lib/rotLove/rot'
-local gener = require 'generator'
+Generator = require 'generator'
 COLORS = require 'colors'
 logger = require 'logger'
 Gamestate = require 'lib/gamestate'
 playstate = require 'states/play'
 whipstate = require 'states/playwhip'
 util = require 'util'
-require 'entity'
-require 'map'
-require 'player'
+Entity = require 'entity'
+Map = require 'map'
+Player = require 'player'
 
 SCREEN_HEIGHT = 45
 SCREEN_WIDTH = 78

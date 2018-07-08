@@ -1,29 +1,25 @@
-local ROT = require 'lib/rotLove/rot' 
-local COLORS = require 'colors'
-local gen = require 'generator'
-local class = require 'lib/middleclass'
-logger = require 'logger'
+Map = {}
 
-Map = class('Map')
-
-function Map:initialize(width, height, display)
-	self.display = display 
-	self.map = {}
-	self.width = width
-	self.height = height
-	self.entities = {}
-	self.numEntities = 0
-	self.x = 0
-	self.y = 0
+function Map:new(width, height, display)
+	m = {}
+	m.display = display 
+	m.map = {}
+	m.width = width
+	m.height = height
+	m.entities = {}
+	m.numEntities = 0
+	m.x = 0
+	m.y = 0
 	
-	for x = 1, self.width, 1 do
-			self.map[x] = {}
-		for y = 1, self.height, 1 do
-				self.map[x][y] = {symbol = '\32', passable = 1, fg = COLORS.YELLOW, fg = COLORS.YELLOW}
+	for x = 1, m.width, 1 do
+			m.map[x] = {}
+		for y = 1, m.height, 1 do
+				m.map[x][y] = {symbol = '\32', passable = 1, fg = COLORS.YELLOW, fg = COLORS.YELLOW}
 		end
 	end
-				
-	self:drawMap()
+	setmetatable(m, self)
+	self.__index = self
+	return m
 end
 
 --sets a tile, only x and y are non-optional
@@ -79,7 +75,6 @@ function Map:drawMap()
 			self.display:write(self.map[x+self.x][y+self.y].symbol, x, y, self.map[x+self.x][y+self.y].fg, self.map[self.x+x][self.y+y].bg)
 		end
 	end
-
 	--write entities on top	
 	for i = 1, self.numEntities, 1 do
 		if self.entities[i].x > self.x + self.display.widthInChars or
@@ -126,3 +121,5 @@ function Map:addEntity(entity)
 	self.entities[self.numEntities + 1] = entity
 	self.numEntities = self.numEntities + 1
 end	
+
+return Map
