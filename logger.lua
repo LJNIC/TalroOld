@@ -1,5 +1,5 @@
 logger = {}
-logger.levels = {["INFO"]=true, ["ERROR"]=true, ["DEBUG"]=true}
+logger.levels = {"INFO", "ERROR", "DEBUG"}
 
 function init()
 	local file = io.open("logs/") 
@@ -16,52 +16,38 @@ function init()
 
 	local filename = "logs/" .. tostring(os.date("%d-%m-%Y")) .. "-" .. count .. ".log"
 	logger.logFile = io.open(filename, "w")
-	log("Log starting...", "INFO")
+	log("Log starting...", 1)
+end
+
+local function checkFile()
+	assert(logger.logFile, "Logger not initialized!")
 end
 
 function log(message, level)
-	if logger.levels[level] == false then
-		print(level .. " level is disabled.")
-		return
-	end
+	checkFile()
+	assert(logger.levels[level] ~= nil, "Invalid logger level: " .. level)
+	if not logger.levels[level] then return end
 
-	if not logger.logFile then
-		print("Logger not initialized!")
-		return
-	end
-
-	local logMessage = "[" .. os.date("%X") .. "]" .. "[" .. level .. "]" .. " " .. message .. "\n"
+	local logMessage = "[" .. os.date("%X") .. "]" .. "[" .. logger.levels[level] .. "]" .. " " .. message .. "\n"
 	logger.logFile:write(logMessage)
 end
 
 function disable(level)
-	if not logger.logFile then
-		print("Logger not initialized!")
-		return
-	end
-
+	checkFile()
 	if logger.levels[level] then
 		logger.levels[level] = false
 	end
 end
 
 function enable(level)
-	if not logger.logFile then
-		print("Logger not initialized!")
-		return
-	end
-
-	if logger.levels[level] == nil then
-		print("Invalid logger lvel: " .. level)
-		return
-	end
+	checkFile()
+	assert(logger.levels[level] ~= nil, "Invalid logger level: " .. level)
 
 	if not logger.levels[level] then
 		logger.levels[level] = true
 	end
 end
 		
-
 logger.init = init
 logger.log = log
 logger.disable = disable
