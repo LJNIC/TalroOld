@@ -1,10 +1,4 @@
 local util = {}
-local left = options.movement.left
-local right = options.movement.right
-local up = options.movement.up
-local down = options.movement.down
-local whip = options.actions.whip
-
 
 --Rounds a 0-1 number to 1 or 0
 function round(num)
@@ -55,7 +49,6 @@ function multVector(x1, y1, x2, y2)
 end
 
 util.parseCSV = parseCSV
-util.keyToDirection = keyToDirection
 util.addVector = addVector
 util.multVector = multVector
 util.loadTable = loadTable

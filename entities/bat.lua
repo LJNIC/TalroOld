@@ -2,7 +2,7 @@
 Bat = {}
 
 function Bat:new(x, y, symbol, fg, bg, map)
-	b = Entity:new(x, y, symbol, fg, bg, map)
+	local b = Entity:new(x, y, symbol, fg, bg, map)
 	b.type = 'bat'
 	b.ai = self.ai 
 	return b

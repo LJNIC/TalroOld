@@ -41,11 +41,12 @@ function Map:getDisplayPoint(x, y)
 	return {x = x - self.x, y =  y - self.y}
 end
 
---Returns whether a point is inside the map or not. 
+--Returns whether a point is inside the map or not 
 function Map:contains(x, y)
 	return x <= self.width and x > 0 and y <= self.height and y > 0 
 end
 
+--Returns whether a translated point is inside the display or not
 function Map:displayContains(x, y)
 	local point = self:getDisplayPoint(x, y)
 	return self.display:contains(point.x, point.y)
@@ -82,6 +83,7 @@ function Map:getPlayer()
 		end
 	end
 end
+
 --checks whether a tile contains a wall or an entity
 function Map:isPassable(x, y)
 	--If the point is outside the map
@@ -133,8 +135,7 @@ function Map:drawMap()
 			self.display:write(entity.symbol, 
 							   entity.x - self.x,
 							   entity.y - self.y,
-							   entity.fg, 
-							   self.map[entity.x][entity.y].tile.visiblebg)--The map's background at the entity
+							   entity.fg)
 		end
 	end
 end
@@ -182,12 +183,8 @@ end
 --Removes the entity from the map if it matches a uuid
 function Map:removeEntity(entity)
 	assert(type(entity) == 'table' and entity.uuid, "Not an entity!")
-	for uuid in pairs(self.entities) do
-		if uuid == entity.uuid then
-			Logger.log('Removed entity of type ' .. entity.type, 3)
-			self.entities[uuid] = nil
-			return;
-		end
+	if self.entities[entity.uuid] then 
+		self.entities[entity.uuid] = nil
 	end
 end
 

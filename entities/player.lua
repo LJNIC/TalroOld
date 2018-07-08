@@ -1,7 +1,7 @@
 Player = {}
 
 function Player:new(x, y, symbol, fg, bg, map)
-	p = Entity:new(x, y, symbol, fg, bg, map)
+	local p = Entity:new(x, y, symbol, fg, bg, map)
 	p.whip = self.whip
 	p.type = 'player'
 	p.onHit = self.onHit

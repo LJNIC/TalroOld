@@ -5,7 +5,7 @@ the player from a distance with its straps. Only moves orthogonally.
 Mummy = {}
 
 function Mummy:new(x, y, symbol, fg, bg, map)
-	m = Entity:new(x, y, symbol, fg, bg, map)
+	local m = Entity:new(x, y, symbol, fg, bg, map)
 	m.type = 'mummy'
 	m.ai = self.ai 
 	m.turn = true

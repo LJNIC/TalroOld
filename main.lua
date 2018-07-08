@@ -18,7 +18,9 @@ AStar = require 'lib/lua-star'
 Serpent = require 'lib/serpent'
 Options = require 'options'
 
+--Loads options 
 Options:loadOptions()
+print(Options.options.actions.whip[1])
 
 --Seeds the uuid creator for entities
 UUID.seed()

@@ -1,7 +1,7 @@
 Entity = {}
 --x position, y position, graphic, foreground, background
 function Entity:new(x, y, symbol, fg, bg, map)
-	e = {}
+	local e = {}
 	setmetatable(e, self)
 	self.__index = self
 	e.x = x

@@ -1,7 +1,6 @@
 local play = {}
 
 function play:init()
-	print(options.movement.up[1])	
 	local spriteSheet = love.graphics.newImage('tilesheet_15x15.png') 
 	spriteSheet:setFilter('nearest', 'nearest')
 	Logger.log("Loaded graphics...", 1)
@@ -52,6 +51,7 @@ function play:init()
 	introMap:addEntity(bat)
 
 	fov:compute(hero.x, hero.y, 6, fovCalbak)
+	acted = false
 end
 
 function fovCalbak(x, y, r, v)
@@ -60,21 +60,15 @@ function fovCalbak(x, y, r, v)
 end
 
 function play:keypressed(key, scancode, isrepeat)
-	local acted = false
 	if Options.moveKeys[key] then
-		local direction = Util.keyToDirection(key)
+		local direction = Options:keyToDirection(key)
 		if hero:move(direction) then
 			if hero:shouldMove(direction) then hero.map:move(direction) end
 			acted = true
 		end
 	elseif Options.actionKeys[key] then
-		Gamestate.switch(Util.keyToAction(key), hero)
+		Gamestate.switch(Options:keyToAction(key), hero)
 		return
-	end
-	if acted then	
-		hero.map:computeAI()
-		hero.map:resetFOV()
-		fov:compute(hero.x, hero.y, 6, fovCalbak)
 	end
 end
 
@@ -83,6 +77,12 @@ function play:draw()
 end
 
 function play:update(dt)
+	if acted then	
+		hero.map:computeAI()
+		hero.map:resetFOV()
+		fov:compute(hero.x, hero.y, 6, fovCalbak)
+		acted = false
+	end
 	introMap:visible(hero.x, hero.y)
 	introMap:drawMap()
 end

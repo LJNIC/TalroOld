@@ -2,7 +2,7 @@
 Rat = {}
 
 function Rat:new(x, y, symbol, fg, bg, map)
-	r = Entity:new(x, y, symbol, fg, bg, map)
+	local r = Entity:new(x, y, symbol, fg, bg, map)
 	r.type = 'rat'
 	return r
 end

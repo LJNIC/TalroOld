@@ -1,8 +1,8 @@
 local playwhip = {}
 
-function playwhip:textinput(t)
-	if moveKeys[t] then
-		hero:whip(keyToDirection(t))
+function playwhip:keypressed(t)
+	if Options.moveKeys[t] then
+		hero:whip(Options:keyToDirection(t))
 		Gamestate.switch(PlayState)
 		hero.map:resetFOV()
 		fov:compute(hero.x, hero.y, 6, fovCalbak)
