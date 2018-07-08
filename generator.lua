@@ -1,4 +1,5 @@
 local Generator = {}
+
 function generateTunnel(width, height, length, roughness, windyness, maxWidth, startAtBottom)
 	map = {}
 	for x = 1, width, 1 do
