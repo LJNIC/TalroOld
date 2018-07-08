@@ -11,6 +11,9 @@ function play:init()
 
 	hero = Player:new(37, 75, '@', COLORS.BLUE, COLORS.YELLOW, tunnelMap)
 	tunnelMap:addEntity(hero)
+
+	monster = Entity:new(39, 75, 'T', COLORS.MAROON, COLORS.YELLOW, tunnelMap)
+	tunnelMap:addEntity(monster)
 	
 	if not tunnelMap:isPassable(hero.x, hero.y) then
 		for x = 1, SCREEN_WIDTH do
@@ -47,12 +50,12 @@ end
 
 function play:textinput(t)
 	if moveKeys[t] then
-		if hero:move(util.keyToDirection(t)) then
-			tunnelMap:moveWindow(util.keyToDirection(t))
+		if hero:move(Util.keyToDirection(t)) then
+			tunnelMap:moveWindow(Util.keyToDirection(t))
 		end
 	elseif actionKeys[t] then
 		if t == 't' then
-			Gamestate.switch(whipstate, tunnelMap, hero, moveKeys)
+			Gamestate.switch(WhipState, tunnelMap, hero, moveKeys)
 		end
 	end
 end
