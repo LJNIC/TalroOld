@@ -1,6 +1,7 @@
 ROT = require 'lib/rotLove/rot'
 UUID = require 'lib/uuid'
 COLORS = require 'util/colors'
+TileTypes = require 'util/tileTypes'
 Logger = require 'logger'
 Gamestate = require 'lib/gamestate'
 IntroState = require 'states/intro'
@@ -16,20 +17,25 @@ Player = require 'entities/player'
 --Seeds the uuid creator for entities
 UUID.seed()
 
-SCREEN_HEIGHT = 45
-SCREEN_WIDTH = 78
+SCREEN_HEIGHT = 20
+SCREEN_WIDTH = 33
 
 moveKeys = {['w'] = true, ['d'] = true, ['s'] = true, ['a'] = true}
 actionKeys = {['t'] = true}
 
 
 function love.load()
+	love.keyboard.setKeyRepeat(true)
 	Logger.init()
 	Gamestate.switch(IntroState)
 end
 
 function love.textinput(t)
 	Gamestate.textinput(t)
+end
+
+function love.keypressed(key, scancode, isrepeat)
+	Gamestate.keypressed(key)
 end
 
 function love.update(dt)	

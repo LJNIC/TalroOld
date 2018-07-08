@@ -3,52 +3,79 @@ local intro = {}
 function intro:init()
 	moveKeys = {['w'] = true, ['d'] = true, ['s'] = true, ['a'] = true}
 	actionKeys = {['t'] = true}
-	--Setup tileset / disintro
-	local spriteSheet = love.graphics.newImage('cheepicus_16x16.png') 
-	logger.log("Loaded map", 1)
-	root = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 1, COLORS.YELLOW, COLORS.YELLOW, nil, spriteSheet, 16, 16)
+	
+	local spriteSheet = love.graphics.newImage('tilesheet_15x15.png') 
+	spriteSheet:setFilter('nearest', 'nearest')
+	Logger.log("Loaded graphics...", 1)
 
-	introMap = Map:new(SCREEN_WIDTH, SCREEN_HEIGHT*2, root)
+	root = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 2, COLORS.YELLOW, COLORS.DARKEST, nil, spriteSheet, 15, 15)
+	digger = ROT.Map.Digger:new(SCREEN_WIDTH, SCREEN_HEIGHT)
+
+	introMap = Map:new(SCREEN_WIDTH, SCREEN_HEIGHT, root)
 	levelMap = Map:new(SCREEN_WIDTH, SCREEN_HEIGHT, root)
+	Logger.log("Loaded maps...", 1)
 
-	levelMap:drawCSV(36, 35, 'new-pyramid-entrance.csv', {'\250'})
+	--Digger map callback function
+	calbak = function(x, y, val)
+		local char = ' '
+		if val == 0 then 
+			introMap:setTile(x, y, TileTypes.Floor)
+		else
+			introMap:setTile(x, y, TileTypes.Wall)
+		end
+	end
 
-	hero = Player:new(40, 75, '\23', COLORS.GREEN, COLORS.YELLOW, introMap)
+	hero = Player:new(20, 20, '\41', COLORS.WHITE, COLORS.YELLOW, introMap)
+	mummy = Mummy:new(25, 20, '\40', COLORS.BROWN, COLORS.YELLOW, introMap)
+
+	--FOV light callback
+	lightCalbak = function(fov, x, y)
+		return hero.map:isPassable(x, y)
+	end
+
+	digger:create(calbak)
+	fov = ROT.FOV.Precise:new(lightCalbak)
+
 	introMap:addEntity(hero)
+	introMap:addEntity(mummy)
 
-	door1 = Door:new(37, 26, ' ', COLORS.BLACK, COLORS.YELLOW, introMap, levelMap, 37, 45)
-	door2 = Door:new(38, 26, ' ', COLORS.BLACK, COLORS.YELLOW, introMap, levelMap, 38, 45)
-	door3 = Door:new(41, 26, ' ', COLORS.BLACK, COLORS.YELLOW, introMap, levelMap, 41, 45)
-	door4 = Door:new(42, 26, ' ', COLORS.BLACK, COLORS.YELLOW, introMap, levelMap, 42, 45)
-
-	introMap:addEntity(door1)
-	introMap:addEntity(door2)
-	introMap:addEntity(door3)
-	introMap:addEntity(door4)
-
-	introMap:drawCSV(1, 1, 'pyramid.csv', {'\176', '\220', '\214'})
-	introMap:move({x=0, y=40})
+	fov:compute(hero.x, hero.y, 6, fovCalbak)
 end
+
+function fovCalbak(x, y, r, v)
+	hero.map:see(x, y)
+	hero.map:visible(x, y)
+end
+
+function intro:keypressed(key, scancode, isrepeat)
+	if key == 'up' then
+		--hero:move({x=0, y=-1})
+	elseif key == 'right' then
+		--hero:move({x=1, y=0})
+	end
+end
+
 
 function intro:textinput(t)
 	if moveKeys[t] then
 		if hero:move(Util.keyToDirection(t)) then
-			hero.map:move(Util.keyToDirection(t))
+			hero.map:resetFOV()
+			fov:compute(hero.x, hero.y, 6, fovCalbak)
 		end
 	elseif actionKeys[t] then
 		if t == 't' then
 			Gamestate.switch(WhipState, hero, moveKeys)
 		end
 	end
-	print(t)
 end
 
 function intro:draw()
-	hero.map:renderMap()
+	introMap:renderMap()
 end
 
 function intro:update(dt)
-	hero.map:drawMap()
+	introMap:visible(hero.x, hero.y)
+	introMap:drawMap()
 end
 
 return intro

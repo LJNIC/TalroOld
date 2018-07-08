@@ -36,10 +36,6 @@ function Digger:init(width, height, options)
         end
     end
 
-	if options.firstRoom then
-		self._options.firstRoom = options.firstRoom
-	end
-
     self._features={Room=4, Corridor=4}
     if self._options.nocorridorsmode then
         self._features.Corridor = nil

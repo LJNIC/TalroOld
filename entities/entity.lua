@@ -15,7 +15,9 @@ function Entity:new(x, y, symbol, fg, bg, map)
 end
 
 function Entity:move(direction)
+	Logger.log('Entity tried to move', 1)
 	if self.map:isPassable(self.x + direction.x, self.y + direction.y) == true then
+		Logger.log('Entity moved', 1)
 		self.x = self.x + direction.x
 		self.y = self.y + direction.y
 		return true
