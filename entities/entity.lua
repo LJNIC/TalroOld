@@ -20,13 +20,14 @@ function Entity:move(direction)
 		self.y = self.y + direction.y
 		return true
 	elseif self.map:getEntityAt(self.x + direction.x, self.y + direction.y) ~= nil then
-		local collided = self.map:getEntityAt(self.x + direction.x, self.y + direction.y)
-		self:onCollide(collided)
+		local hit = self.map:getEntityAt(self.x + direction.x, self.y + direction.y)
+		self:onHit(hit)
 	end
 	return false
 end
 
---entities should override this function
-function Entity:onCollide(other) return end
+--entities should override these functions
+function Entity:onHit(other) return end
+function Entity:onDefend(other) return end
 
 return Entity

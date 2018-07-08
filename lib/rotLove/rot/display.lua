@@ -10,20 +10,22 @@ local Display = ROT.Class:extend("Display")
 -- @tparam[opt=80] int w Width of display in number of characters
 -- @tparam[opt=24] int h Height of display in number of characters
 -- @tparam[opt=1] float scale Window scale modifier applied to glyph dimensions
--- @tparam[opt=cp437.png] love image CP437 font image 
 -- @tparam[opt] table dfg Default foreground color as a table defined as {r,g,b,a}
 -- @tparam[opt] table dbg Default background color
 -- @tparam[opt=false] boolean fullOrFlags In Love 0.8.0: Use fullscreen In Love 0.9.0: a table defined for love.graphics.setMode
--- @tparam[opt=9] int cw if you provide a
--- @tparam[opt=16] ch tile height
+-- @tparam[opt=cp437.png] love image CP437 font image 
+-- @tparam[opt=12] int imgcw Width of the image's characters 
+-- @tparam[opt=12] int imgch Height of the image's characters
 -- @return nil
-function Display:init(w, h, scale, dfg, dbg)
+function Display:init(w, h, scale, dfg, dbg, fullOrFlags, image, imgcw, imgch)
     self.__name = 'Display'
     self.widthInChars = w and w or 80
     self.heightInChars = h and h or 24
     self.scale = scale or 1
-    self.charWidth = cw * self.scale or 9 * self.scale
-    self.charHeight = ch * self.scale or 16 * self.scale
+    self.imageCharWidth = imgcw or 12
+    self.imageCharHeight = imgch or 12
+    self.charWidth = self.imageCharWidth * self.scale
+    self.charHeight = self.imageCharHeight * self.scale
     self.glyphs = {}
     self.chars = {{}}
     self.backgroundColors = {{}}
@@ -32,15 +34,16 @@ function Display:init(w, h, scale, dfg, dbg)
     self.oldBackgroundColors = {{}}
     self.oldForegroundColors = {{}}
     self.graphics = love.graphics
-    love.window.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars)
+    love.window.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars, fullOrFlags)
     self.drawQ = self.graphics.draw
 
-    self.defaultForegroundColor = { 0.9215686274509803, 
-								    0.9215686274509803, 
-									0.9215686274509803 }
-    self.defaultBackgroundColor = { 0.058823529411764705
-								  , 0.058823529411764705
-								  , 0.058823529411764705 }
+    self.defaultForegroundColor = dfg or { 0.9215686274509803, 
+					   0.9215686274509803, 
+					   0.9215686274509803 }
+
+    self.defaultBackgroundColor = dbg or { 0.058823529411764705, 
+    					   0.058823529411764705, 
+					   0.058823529411764705 }
 
     self.graphics.setBackgroundColor(self.defaultBackgroundColor)
 
@@ -48,9 +51,9 @@ function Display:init(w, h, scale, dfg, dbg)
 
     self.glyphSprite = image or self.graphics.newImage(Display_Path .. 'img/cp437.png')
     for i = 0, 255 do
-        local sx = (i%16)*cw
-        local sy = math.floor(i/16)*ch
-        self.glyphs[i] = self.graphics.newQuad(sx, sy, cw, ch, self.glyphSprite:getWidth(), self.glyphSprite:getHeight())
+        local sx = (i%16) * self.imageCharWidth
+        local sy = math.floor(i/16) * self.imageCharHeight
+        self.glyphs[i] = self.graphics.newQuad(sx, sy, self.imageCharWidth, self.imageCharHeight, self.glyphSprite:getWidth(), self.glyphSprite:getHeight())
     end
 
     for i = 1, self.widthInChars do
@@ -86,11 +89,10 @@ function Display:draw()
                self.oldBackgroundColors[x][y] ~= bg or
                self.oldForegroundColors[x][y] ~= fg then
 
-               	self:_setColor(bg)
-
-               	self.graphics.rectangle('fill', px, py, self.charWidth, self.charHeight)
-
-                if c ~= 32 and c ~= 255 then local qd=self.glyphs[c]
+             	self:_setColor(bg)
+              	self.graphics.rectangle('fill', px, py, self.charWidth, self.charHeight)
+                if c ~= 32 and c ~= 255 then
+                    local qd=self.glyphs[c]
                     self:_setColor(fg)
                     self.drawQ(self.glyphSprite, qd, px, py, nil, self.scale)
                 end
@@ -109,7 +111,7 @@ end
 --- Contains point.
 -- Returns true if point x,y can be drawn to display.
 function Display:contains(x, y)
-    return x>0 and x<=self:getWidth() and y>0 and y<=self:getHeight()
+    return x > 0 and x <= self:getWidth() and y > 0 and y <= self:getHeight()
 end
 
 function Display:getCharHeight() return self.charHeight end

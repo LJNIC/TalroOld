@@ -4,7 +4,7 @@ function Player:new(x, y, symbol, fg, bg, map)
 	p = Entity:new(x, y, symbol, fg, bg, map)
 	p.whip = self.whip
 	p.type = 'player'
-	p.onCollide = self.onCollide
+	p.onHit = self.onHit
 	return p
 end
 
@@ -23,13 +23,11 @@ function Player:whip(direction)
 	end
 end
 
-function Player:onCollide(other)
+function Player:onHit(other)
 	if other.type == 'mummy' then
 		self.map:removeEntity(other)
 	elseif other.type == 'door' then
-		Gamestate.switch(Floor1)
 	end
 end
 	
-
 return Player
