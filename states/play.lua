@@ -9,7 +9,6 @@ function play:init()
 	digger = ROT.Map.Digger:new(SCREEN_WIDTH, SCREEN_HEIGHT + 20)
 
 	introMap = Map:new(SCREEN_WIDTH, SCREEN_HEIGHT + 20, root)
-	levelMap = Map:new(SCREEN_WIDTH, SCREEN_HEIGHT, root)
 	Logger.log("Loaded maps...", 1)
 
 	--Digger map callback function
@@ -33,20 +32,6 @@ function play:init()
 	digger:create(calbak)
 	fov = ROT.FOV.Precise:new(lightCalbak)
 
-	local found = false
-	for x = 1, introMap.width do
-		if found then break end
-		for y = 1, introMap.height do
-			if introMap:isPassable(x, y) then
-				hero.x = x
-				hero.y = y
-				introMap:move({x=x, y=y})
-				found = true
-				break
-			end
-		end
-	end
-
 	introMap:addEntity(hero)
 	introMap:addEntity(bat)
 
@@ -54,12 +39,14 @@ function play:init()
 	acted = false
 end
 
+--fov callback, sets the map tile to seen and visible
 function fovCalbak(x, y, r, v)
 	hero.map:see(x, y)
 	hero.map:visible(x, y)
 end
 
 function play:keypressed(key, scancode, isrepeat)
+	--If the key is part of the movement keys
 	if Options.moveKeys[key] then
 		local direction = Options:keyToDirection(key)
 		if hero:move(direction) then
@@ -75,7 +62,7 @@ function play:keypressed(key, scancode, isrepeat)
 end
 
 function play:draw()
-	introMap:renderMap()
+	hero.map:renderMap()
 end
 
 function play:update(dt)
@@ -85,8 +72,8 @@ function play:update(dt)
 		fov:compute(hero.x, hero.y, 6, fovCalbak)
 		acted = false
 	end
-	introMap:visible(hero.x, hero.y)
-	introMap:drawMap()
+	hero.map:visible(hero.x, hero.y)
+	hero.map:drawMap()
 end
 
 return play 

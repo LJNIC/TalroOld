@@ -1,9 +1,9 @@
 Menu = {}
 
 function Menu:enter()
-	local spriteSheet = love.graphics.newImage('assets/tilesheet_15x15.png')
+	local spriteSheet = love.graphics.newImage('assets/cheepicus_16x16.png')
 	spriteSheet:setFilter('nearest', 'nearest')
-	menuRoot = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 2, COLORS.YELLOW, COLORS.DARKEST, nil, spriteSheet, 15, 15)
+	menuRoot = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 2, COLORS.YELLOW, COLORS.DARKEST, nil, spriteSheet, 16, 16)
 	menuRoot:write('\201')	
 	menuRoot:write('\187', SCREEN_WIDTH, 1)
 	menuRoot:write('\200', 1, SCREEN_HEIGHT)
@@ -16,36 +16,42 @@ function Menu:enter()
 		menuRoot:write('\186', 1, y)
 		menuRoot:write('\186', SCREEN_WIDTH, y)
 	end
-	font = love.graphics.newFont('assets/font.ttf', 32)
+	menuFont = love.graphics.newFont('assets/BetterPixels.ttf', 48)
 	title = love.graphics.newImage('assets/talro.png')
 	titleX = SCREEN_WIDTH*30/2 - 180
 	titleY = 60
+	buttonStyle = {
+		font = menuFont, 
+		default = COLORS.DARKEST,
+		fg = COLORS.YELLOW,
+		hilitefg = COLORS.WHITE,
+		hilite = COLORS.DARKEST
+	}
+	mainMenu = GUI()
 
-	playButton = GUI:button('PLAY', {x = SCREEN_WIDTH*30/2-50, y = SCREEN_HEIGHT*30/2 - 50, w = 100, h = 35})
-	playButton.style.font = font
-	playButton.style.default= COLORS.DARKEST
-	playButton.style.fg = COLORS.YELLOW
-	playButton.style.hilitefg = COLORS.WHITE
-	playButton.style.hilite = COLORS.DARKEST
+	playButton = mainMenu:button('PLAY', {x = SCREEN_WIDTH*30/2 - 50, y = SCREEN_HEIGHT*30/2 - 50, w = 100, h = 35})
+	playButton.style = buttonStyle
 	playButton.click = function(this, x, y)
 		Gamestate.switch(PlayState)
 	end
 
-	quitButton = GUI:button('QUIT', {x = SCREEN_WIDTH*30/2-50, y = SCREEN_HEIGHT*30/2, w = 100, h = 35})
-	quitButton.style.font = font
-	quitButton.style.default= COLORS.DARKEST
-	quitButton.style.hilitefg = COLORS.WHITE
-	quitButton.style.fg = COLORS.YELLOW
-	quitButton.style.hilite = COLORS.DARKEST
+	quitButton = mainMenu:button('QUIT', {x = SCREEN_WIDTH*30/2 - 50, y = SCREEN_HEIGHT*30/2, w = 100, h = 35})
+	quitButton.style = buttonStyle
 	quitButton.click = function(this, x, y)
 		love.event.quit()
+	end
+
+	optionButton = mainMenu:button('OPTIONS', {x = SCREEN_WIDTH*30/2 - 50, y = SCREEN_HEIGHT*30/2 + 50, w = 100, h = 35})
+	optionButton.style = buttonStyle
+	optionButton.click = function(this, x, y)
+		Gamestate.switch(MenuOptions, menuRoot)
 	end
 end
 
 function Menu:draw()
 	menuRoot:draw()
-	GUI:draw()
-	love.graphics.setColor(COLORS.YELLOW)
+	mainMenu:draw()
+	love.graphics.setColor(COLORS.GREEN)
 	love.graphics.draw(title, titleX, titleY)
 end
 
@@ -56,15 +62,15 @@ function Menu:keypressed(key, scancode, isrepeat)
 end
 
 function Menu:mousepressed(x, y, button)
-	GUI:mousepress(x, y, button)
+	mainMenu:mousepress(x, y, button)
 end
 
 function Menu:mousereleased(x, y, button)
-	GUI:mouserelease(x, y, button)
+	mainMenu:mouserelease(x, y, button)
 end
 
 function Menu:update(dt)
-	GUI:update(dt)	
+	mainMenu:update(dt)	
 end
 
 return Menu

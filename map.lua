@@ -75,6 +75,11 @@ function Map:setTile(x, y, tileType)
 	self.map[x][y].tile = tileType	
 end
 
+function Map:centerOn(x, y)
+	if not self:contains(x, y) then return end
+	
+end
+
 --return location of player
 function Map:getPlayer()
 	for _,entity in pairs(self.entities) do

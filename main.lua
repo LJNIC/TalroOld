@@ -6,8 +6,9 @@ TileTypes = require 'util/tileTypes'
 Logger = require 'logger'
 Gamestate = require 'lib/gamestate'
 PlayState = require 'states/play'
-WhipState = require 'states/playwhip'
+WhipState = require 'states/playWhip'
 MenuState = require 'states/menu'
+MenuOptions = require 'states/menuOptions'
 Util = require 'util/util'
 Entity = require 'entities/entity'
 Mummy = require 'entities/mummy'
@@ -20,12 +21,13 @@ Serpent = require 'lib/serpent'
 Options = require 'options'
 GUI = require 'lib/Gspot'
 
---Loads options 
+--Load options file
 Options:loadOptions()
 
---Seeds the uuid creator for entities
+--Seed the uuid creator for entities
 UUID.seed()
 
+--Height and width in tiles
 SCREEN_HEIGHT = 22
 SCREEN_WIDTH = 37
 

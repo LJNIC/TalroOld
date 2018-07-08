@@ -175,7 +175,7 @@ end
 Gspot.load = function(this)
 	local def = {
 		style = {
-			unit = this.style.unit,
+			unit = 16,
 			font = this.style.font,
 			fg = this.style.fg,
 			bg = this.style.bg,
@@ -803,6 +803,7 @@ Gspot.text = {
 	end,
 	draw = function(this, pos)
 		setColor(this.style.labelfg or this.style.fg)
+		this.style.unit = 16
 		if this.autosize then lgprint(this.label, pos.x + (this.style.unit / 4), pos.y + (this.style.unit / 8))
 		else lgprintf(this.label, pos.x + (this.style.unit / 4), pos.y + (this.style.unit / 8), (this.autosize and pos.w) or pos.w - (this.style.unit / 2), 'left') end
 	end,
