@@ -24,9 +24,17 @@ function Player:whip(direction)
 end
 
 function Player:onHit(other)
+	Logger.log('Player hit an entity', 3)
 	if other.type == 'mummy' then
 		self.map:removeEntity(other)
 	elseif other.type == 'door' then
+		Logger.log("Hit door", 3)
+		self.map:removeEntity(self)
+		self.x = other.nextX
+		self.y = other.nextY
+		self.map = other.nextMap
+		self.mapChanged = true
+		self.map:addEntity(self)
 	end
 end
 	

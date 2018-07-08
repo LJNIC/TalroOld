@@ -7,7 +7,6 @@ function Map:new(width, height, display)
 	m.width = width
 	m.height = height
 	m.entities = {}
-	m.numEntities = 0
 	m.x = 0
 	m.y = 0
 	
@@ -42,13 +41,15 @@ end
 
 --checks whether a tile contains a wall or an entity
 function Map:isPassable(x, y)
+	--If the point is outside the map
 	if x > self.width or x < 1
 	   or y > self.height or y < 1 then
 	   return false
 	end
+	--If there's an entity in the way
 	if self.map[x][y].passable == 0 then
-		for i = 1, self.numEntities, 1 do --skip 1 because that will always be the player
-			if x == self.entities[i].x and y == self.entities[i].y then
+		for _,entity in pairs(self.entities) do
+			if x == entity.x and y == entity.y then
 				return false 
 			end
 		end
@@ -58,10 +59,11 @@ function Map:isPassable(x, y)
 	end
 end
 
+--Returns nil or the entity at the given position
 function Map:getEntityAt(x, y)
-	for i = 1, self.numEntities do
-		if x == self.entities[i].x and y == self.entities[i].y then
-			return self.entities[i]
+	for _,entity in pairs(self.entities) do
+		if x == entity.x and y == entity.y then
+			return entity
 		end
 	end
 end
@@ -75,23 +77,29 @@ function Map:drawMap()
 			self.display:write(self.map[x+self.x][y+self.y].symbol, x, y, self.map[x+self.x][y+self.y].fg, self.map[self.x+x][self.y+y].bg)
 		end
 	end
-	--write entities on top	
-	for i = 1, self.numEntities, 1 do
-		if self.entities[i].x > self.x + self.display.widthInChars or
-		   self.entities[i].x < 1 + self.x or
-		   self.entities[i].y > self.y + self.display.heightInChars or
-		   self.entities[i].y < self.y + 1 then
-			return 
+
+	for _,entity in pairs(self.entities) do
+		local shouldDraw = true
+		--Check if the entity is non-nil or if the entity is outside of the display area
+		if entity.x == nil or (entity.x > self.x + self.display.widthInChars or
+		   entity.x < 1 + self.x or
+		   entity.y > self.y + self.display.heightInChars or
+		   entity.y < self.y + 1) then
+		   shouldDraw = false
 		end
 
-		self.display:write(self.entities[i].symbol, 
-							self.entities[i].x - self.x, 
-							self.entities[i].y - self.y, 
-							self.entities[i].fg, 
-							self.map[self.entities[i].x][self.entities[i].y].bg)--The map's background at the entity
+		--Draw the entity
+		if shouldDraw then
+			self.display:write(entity.symbol, 
+							entity.x - self.x, 
+							entity.y - self.y, 
+							entity.fg, 
+							self.map[entity.x][entity.y].bg)--The map's background at the entity
+		end
 	end
 end
 
+--Returns the x and y translated to its actual display position
 function Map:getDisplayPoint(x, y)
 	if x < self.x + self.display.widthInChars and
 	   x > self.x and
@@ -101,7 +109,8 @@ function Map:getDisplayPoint(x, y)
 	end
 end
 
-function Map:moveWindow(direction)	
+--Moves the map so that it's drawn at a different point
+function Map:move(direction)	
 	if self.x + self.display.widthInChars + direction.x > self.width or
 	   self.y + self.display.heightInChars + direction.y > self.height or
 	   self.x + direction.x < 0 or 
@@ -117,19 +126,20 @@ function Map:renderMap()
 	self.display:draw()
 end
 
+--Adds the entity to the map
 function Map:addEntity(entity)
 	assert(type(entity) == 'table' and entity.uuid, "Not an entity!")
-	self.entities[self.numEntities + 1] = entity
-	self.numEntities = self.numEntities + 1
+	Logger.log('Added entity of type ' .. entity.type, 3)
+	self.entities[entity.uuid] = entity
 end	
 
 function Map:removeEntity(entity)
 	assert(type(entity) == 'table' and entity.uuid, "Not an entity!")
-	for i = 1, self.numEntities do
-		if self.entities[i].uuid == entity.uuid then
-			self.entities[i] = nil
-			self.numEntities = self.numEntities - 1
-
+	for uuid in pairs(self.entities) do
+		if uuid == entity.uuid then
+			Logger.log('Removed entity of type ' .. entity.type, 3)
+			self.entities[uuid] = nil
+			return;
 		end
 	end
 end
