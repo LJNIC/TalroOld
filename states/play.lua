@@ -1,7 +1,7 @@
 local play = {}
 
 function play:init()
-	
+	print(options.movement.up[1])	
 	local spriteSheet = love.graphics.newImage('tilesheet_15x15.png') 
 	spriteSheet:setFilter('nearest', 'nearest')
 	Logger.log("Loaded graphics...", 1)
@@ -68,10 +68,8 @@ function play:keypressed(key, scancode, isrepeat)
 			acted = true
 		end
 	elseif actionKeys[key] then
-		if t == 't' then
-			Gamestate.switch(WhipState, hero)
-			return
-		end
+		Gamestate.switch(Util.keyToAction(key), hero)
+		return
 	end
 	if acted then	
 		hero.map:computeAI()

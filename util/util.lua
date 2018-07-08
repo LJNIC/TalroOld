@@ -1,17 +1,29 @@
 local util = {}
+local left = options.movement.left
+local right = options.movement.right
+local up = options.movement.up
+local down = options.movement.down
+local whip = options.actions.whip
+
 --returns a 'vector' unit based on the key
 function keyToDirection(key)
-	if key == 'w' then
+	if up[key] then
 		return {x=0, y=-1}
-	elseif key == 'd' then
+	elseif right[key] then
 		return {x=1, y=0}
-	elseif key == 's' then
+	elseif down[key] then
 		return {x=0, y=1}
-	elseif key == 'a' then
+	elseif left[key] then
 		return {x=-1, y=0}
 	end
 end
 
+function keyToAction(key)
+	if key == whip then
+		return WhipState
+	end
+end
+--Rounds a 0-1 number to 1 or 0
 function round(num)
 	return (num > 0.5) and 1 or 0
 end
@@ -39,17 +51,30 @@ function parseCSV(csvfile)
 	end
 	return values
 end
+
+--Loads a file as a table using Serpent
+function loadTable(filename)
+	return Serpent.load(io.open(filename, 'r'):read('*all'))
+end
+
+function util.getOption()
+	return options.movement.up[1]
+end
 	
+--Generates the default options and writes them to the options file
 function generateDefaults()
 	local options = {
-	movement = {
+	 movement = {
 		up = {'up', 'k'},
 		down = {'down', 'j'},
-		right = {'l', 'right'},
-		left = {'h', 'left'}
+		right = {'right', 'l'},
+		left = {'left', 'h'}
+		},
+	 actions = {
+		whip = 't'
 		}
 	}
-	local file = io.open('options', 'w')
+	local file = io.open('options.conf', 'w')
 	file:write(Serpent.block(options, {comment = false}))
 	file:close()
 end
@@ -70,5 +95,6 @@ util.parseCSV = parseCSV
 util.keyToDirection = keyToDirection
 util.addVector = addVector
 util.multVector = multVector
+util.loadTable = loadTable
 
 return util

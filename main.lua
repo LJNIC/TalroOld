@@ -17,16 +17,33 @@ Bat = require 'entities/bat'
 AStar = require 'lib/lua-star'
 Serpent = require 'lib/serpent'
 
+optionsFile = io.open('options.conf', 'r')
+if optionsFile == nil then
+	Util.generateDefaults()
+end
+
+err, options = Util.loadTable('options.conf')
+if err then 
+	Util.generateDefaults()
+	err, options = Util.loadTable('options.conf')
+end
+
+moveKeys = {}
+for _,keys in pairs(options.movement) do
+	moveKeys[keys[1]] = true
+	moveKeys[keys[2]] = true	
+end	
+
+actionKeys = {}
+for _,keys in pairs(options.actions) do
+	actionKeys[keys[1]] = true
+end
 
 --Seeds the uuid creator for entities
 UUID.seed()
 
 SCREEN_HEIGHT = 22
 SCREEN_WIDTH = 35
-
-moveKeys = {['w'] = true, ['d'] = true, ['s'] = true, ['a'] = true}
-actionKeys = {['t'] = true}
-
 
 function love.load()
 	love.keyboard.setKeyRepeat(true)

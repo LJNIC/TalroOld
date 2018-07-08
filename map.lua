@@ -16,7 +16,6 @@ function Map:new(width, height, display)
 	m.entities = {}
 	m.x = 0
 	m.y = 0
-
 	for x = 1, m.width do
 		m.map[x] = {}
 		for y = 1, m.height do
