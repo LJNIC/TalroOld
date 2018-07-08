@@ -24,7 +24,7 @@ function intro:init()
 	end
 
 	hero = Player:new(20, 20, '\35', COLORS.GREEN, COLORS.YELLOW, introMap)
-	bat = Bat:new(21, 21, '\38', COLORS.BROWN, COLORS.YELLOW, introMap)
+	bat = Mummy:new(21, 21, '\38', COLORS.BROWN, COLORS.YELLOW, introMap)
 
 	--FOV light callback
 	lightCalbak = function(fov, x, y)
@@ -34,13 +34,15 @@ function intro:init()
 	digger:create(calbak)
 	fov = ROT.FOV.Precise:new(lightCalbak)
 
+	local found = false
 	for x = 1, introMap.width do
+		if found then break end
 		for y = 1, introMap.height do
 			if introMap:isPassable(x, y) then
-				print(x, y)
 				hero.x = x
 				hero.y = y
 				introMap:move({x=x, y=y})
+				found = true
 				break
 			end
 		end
@@ -80,8 +82,8 @@ function intro:textinput(t)
 		end
 	end
 	if acted then	
-		hero.map:resetFOV()
 		hero.map:computeAI()
+		hero.map:resetFOV()
 		fov:compute(hero.x, hero.y, 6, fovCalbak)
 	end
 end

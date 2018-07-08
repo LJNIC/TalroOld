@@ -29,12 +29,12 @@ function AStar:compute(fromX, fromY, callback)
     self._done[self._toX]={}
     self:_add(self._toX, self._toY, nil)
 
-    while #self._todo>0 do
-        local item=table.remove(self._todo, 1)
+    while #self._todo > 0 do
+        local item = table.remove(self._todo, 1)
         if item.x == fromX and item.y == fromY then break end
-        local neighbors=self:_getNeighbors(item.x, item.y)
+        local neighbors = self:_getNeighbors(item.x, item.y)
 
-        for i=1,#neighbors do
+        for i = 1, #neighbors do
             local x = neighbors[i][1]
             local y = neighbors[i][2]
             if not self._done[x] then self._done[x]={} end
@@ -44,7 +44,7 @@ function AStar:compute(fromX, fromY, callback)
         end
     end
 
-    local item=self._done[self._fromX] and self._done[self._fromX][self._fromY] or nil
+    local item = self._done[self._fromX] and self._done[self._fromX][self._fromY] or nil
     if not item then return end
 
     while item do

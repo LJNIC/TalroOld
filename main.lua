@@ -14,6 +14,7 @@ Door = require 'entities/door'
 Map = require 'map'
 Player = require 'entities/player'
 Bat = require 'entities/bat'
+AStar = require 'lib/lua-star'
 Serpent = require 'lib/serpent'
 
 

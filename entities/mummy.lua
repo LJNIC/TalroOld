@@ -8,36 +8,55 @@ function Mummy:new(x, y, symbol, fg, bg, map)
 	m = Entity:new(x, y, symbol, fg, bg, map)
 	m.type = 'mummy'
 	m.ai = self.ai 
+	m.turn = true
+	m.lastpath = nil
+	m.pathcount = 0
+	m.grab = 4
 	return m
 end
 
 function Mummy:ai()
 	--Pathfinding: Target player when in player's FOV, if not move randomly
-	if self.map:isVisible(self.x, self.y) then
+	if self.map.map[self.x][self.y].visible and self.turn then
 		local player = self.map:getPlayer()
+
+		--Check if player is within range to grab and grab them if they are
 		local dx = player.x - self.x
 		local dy = player.y - self.y
-		if math.abs(dx) > math.abs(dy) then
-			if self:canMove({x=1, y=0}) then
-				self:move({x=1, y=0})
-			elseif self:canMove({x=-1, y=0}) then
-				dx = -1
-			end
-		else
-			
+		if dx == 0 and math.abs(dy) < self.grab then
+			self:grab({x=0, y = (dy > 0) and 1 or -1})
+			self.turn = not self.turn
+			return
+		elseif dy == 0 and math.abs(dx) < self.grab then
+			self:grab({x = (dx > 0) and 1 or -1, y=0})
+			self.turn = not self.turn
+			return
 		end
-		dx = Util.round(dx / distance)
-		dy = Util.round(dy / distance) 
-		self:move(dx, dy)
-	else
-		local axis = (math.random() > 0.5) and 'x' or 'y'
-		local direction = (math.random() > 0.5) and 1 or -1
-		if axis == 'x' then
-			self:move({x=direction, y=0})
+
+		self.pathcount = 0	
+		local self.lastpath = AStar:find(self.map.width, self.map.height, self, player, 
+			function(x, y) return self.map.map[x][y].tile.passable == 0 end)
+
+		--Get the second tile in the path because the first is the mummy
+		local to = self.lastpath[2]
+		self.pathcount = self.pathcount + 1	
+		self:move({x = to.x - self.x, y = to.y - self.y})
+	elseif self.turn then
+		--If the player is out of view but the mummy hasn't reached their last location, continue on it
+		if self.pathcount < #self.lastpath then
+			local to = self.lastpath[2 + self.pathcount]
+			self.pathcount = self.pathcount + 1
+			self:move({x = to.x - self.x, y = to.y - self.y})
+		--If the player is out of view and the mummy has reached the last location, wander randomly
 		else
-			self:move({x=0, y=direction})
+			local axis = (math.random() > 0.5) and 1 or -1	
+			local direction = (math.random() > 0.5) and 1 or -1
+			self:move({x = axis == 1 and direction or 0, y = axis == -1 and direction or 0})
 		end
 	end
+		
+	--Toggle whether the mummy takes a turn to make them go half as fast
+	self.turn = not self.turn
 end
 
 function Mummy:grab(direction)
