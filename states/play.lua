@@ -9,9 +9,9 @@ function intro:init()
 	Logger.log("Loaded graphics...", 1)
 
 	root = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 2, COLORS.YELLOW, COLORS.DARKEST, nil, spriteSheet, 15, 15)
-	digger = ROT.Map.Digger:new(SCREEN_WIDTH, SCREEN_HEIGHT)
+	digger = ROT.Map.Digger:new(SCREEN_WIDTH, SCREEN_HEIGHT + 20)
 
-	introMap = Map:new(SCREEN_WIDTH, SCREEN_HEIGHT, root)
+	introMap = Map:new(SCREEN_WIDTH, SCREEN_HEIGHT + 20, root)
 	levelMap = Map:new(SCREEN_WIDTH, SCREEN_HEIGHT, root)
 	Logger.log("Loaded maps...", 1)
 
@@ -25,8 +25,17 @@ function intro:init()
 		end
 	end
 
-	hero = Player:new(20, 20, '\41', COLORS.WHITE, COLORS.YELLOW, introMap)
-	mummy = Mummy:new(25, 20, '\40', COLORS.BROWN, COLORS.YELLOW, introMap)
+	hero = Player:new(20, 20, '\35', COLORS.GREEN, COLORS.YELLOW, introMap)
+	mummy = Mummy:new(21, 21, '\40', COLORS.BROWN, COLORS.YELLOW, introMap)
+	for x = 1, introMap.width do
+		for y = 1, introMap.height do
+			if introMap:isPassable(x, y) then
+				hero.x = x
+				hero.y = y
+				break
+			end
+		end
+	end
 
 	--FOV light callback
 	lightCalbak = function(fov, x, y)
@@ -38,6 +47,7 @@ function intro:init()
 
 	introMap:addEntity(hero)
 	introMap:addEntity(mummy)
+	introMap:setTile(10, 15, TileTypes.Wall)
 
 	fov:compute(hero.x, hero.y, 6, fovCalbak)
 end
@@ -55,17 +65,24 @@ function intro:keypressed(key, scancode, isrepeat)
 	end
 end
 
-
 function intro:textinput(t)
+	local acted = false
 	if moveKeys[t] then
-		if hero:move(Util.keyToDirection(t)) then
-			hero.map:resetFOV()
-			fov:compute(hero.x, hero.y, 6, fovCalbak)
+		local direction = Util.keyToDirection(t)
+		if hero:move(direction) then
+			if hero:shouldMove(direction) then hero.map:move(direction) end
+			acted = true
 		end
 	elseif actionKeys[t] then
 		if t == 't' then
 			Gamestate.switch(WhipState, hero, moveKeys)
+			return
 		end
+	end
+	if acted then	
+		hero.map:resetFOV()
+		hero.map:computeAI()
+		fov:compute(hero.x, hero.y, 6, fovCalbak)
 	end
 end
 

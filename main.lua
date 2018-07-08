@@ -4,7 +4,7 @@ COLORS = require 'util/colors'
 TileTypes = require 'util/tileTypes'
 Logger = require 'logger'
 Gamestate = require 'lib/gamestate'
-IntroState = require 'states/intro'
+PlayState = require 'states/play'
 WhipState = require 'states/playwhip'
 FloorOneState = require 'states/floorone'
 Util = require 'util/util'
@@ -17,8 +17,8 @@ Player = require 'entities/player'
 --Seeds the uuid creator for entities
 UUID.seed()
 
-SCREEN_HEIGHT = 20
-SCREEN_WIDTH = 33
+SCREEN_HEIGHT = 22
+SCREEN_WIDTH = 35
 
 moveKeys = {['w'] = true, ['d'] = true, ['s'] = true, ['a'] = true}
 actionKeys = {['t'] = true}
@@ -27,7 +27,7 @@ actionKeys = {['t'] = true}
 function love.load()
 	love.keyboard.setKeyRepeat(true)
 	Logger.init()
-	Gamestate.switch(IntroState)
+	Gamestate.switch(PlayState)
 end
 
 function love.textinput(t)

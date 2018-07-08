@@ -5,6 +5,7 @@ function Player:new(x, y, symbol, fg, bg, map)
 	p.whip = self.whip
 	p.type = 'player'
 	p.onHit = self.onHit
+	p.shouldMove = self.shouldMove
 	return p
 end
 
@@ -22,6 +23,30 @@ function Player:whip(direction)
 		end
 	end
 end
+
+function Player:shouldMove(direction)
+	--TODO: Check if player is close enough to edge of display to move the map
+	point = self.map:getDisplayPoint(self.x, self.y)
+	if direction.x ~= 0 then
+		if direction.x > 0 then
+			if self.map.display:getWidth() - point.x < 8 then return true end
+			return false
+		else
+			if point.x < 8 then return true end
+			return false
+		end
+	else
+		if direction.y > 0 then
+			if self.map.display:getHeight() - point.y < 8 then return true end
+			return false
+		else
+			if point.y < 8 then return true end
+			return false 
+		end
+	end
+end
+	
+	
 
 function Player:onHit(other)
 	Logger.log('Player hit an entity', 3)

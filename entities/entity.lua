@@ -14,6 +14,7 @@ function Entity:new(x, y, symbol, fg, bg, map)
 	return e
 end
 
+--Moves the entity by a vector {x=, y=}
 function Entity:move(direction)
 	Logger.log('Entity tried to move', 1)
 	if self.map:isPassable(self.x + direction.x, self.y + direction.y) == true then
@@ -24,6 +25,7 @@ function Entity:move(direction)
 	elseif self.map:getEntityAt(self.x + direction.x, self.y + direction.y) ~= nil then
 		local hit = self.map:getEntityAt(self.x + direction.x, self.y + direction.y)
 		self:onHit(hit)
+		return true
 	end
 	return false
 end

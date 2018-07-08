@@ -9,8 +9,8 @@ function tileTypes:newTile(tileType, seenfg, visiblefg, passable, symbol)
 	self[tileType] = t
 end
 
-tileTypes:newTile('Floor', COLORS.GREY, COLORS.YELLOW, 0, '\13')
-tileTypes:newTile('Wall', COLORS.GREY, COLORS.YELLOW, 1, '\17')
+tileTypes:newTile('Floor', COLORS.GREY, COLORS.WHITE, 0, '\13')
+tileTypes:newTile('Wall', COLORS.GREY, COLORS.YELLOW, 1, '\16')
 tileTypes:newTile('Hero', COLORS.WHITE, COLORS.WHITE , 1, '\35')
 
 return tileTypes

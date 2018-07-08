@@ -4,14 +4,11 @@ Entities are stored as a list of uuid, entity pairs.
 The map can be moved around and drawn from different points.
 The map's display is controlled by rotLove's display class.
 --]]
---
 Map = {}
 
 --Creates a map. A display is a rotLove Display class.
 function Map:new(width, height, display)
 	m = {}
-	m.seen = {}
-	m.fov = {}
 	m.display = display 
 	m.map = {}
 	m.width = width
@@ -23,7 +20,7 @@ function Map:new(width, height, display)
 	for x = 1, m.width do
 		m.map[x] = {}
 		for y = 1, m.height do
-			m.map[x][y] = {seen = false, tile = TileTypes.Floor}
+			m.map[x][y] = {seen = false, tile = TileTypes.Wall}
 		end
 	end
 	setmetatable(m, self)
@@ -73,7 +70,6 @@ function Map:isPassable(x, y)
 	--
 	if not self:isInside(x, y) then return end
 
-	Logger.log(self.map[x][y].tile.passable, 1)
 	--If there's an entity in the way
 	if self.map[x][y].tile.passable == 0 then
 		for _,entity in pairs(self.entities) do
@@ -99,15 +95,14 @@ end
 --writes the characters to the object, not to screen
 function Map:drawMap()
 
+	self.display:clear()
 	--write the terrain
-	for x = 1, self.display.widthInChars do
-		for y = 1, self.display.heightInChars do
+	for x = 1, self.display:getWidth() do
+		for y = 1, self.display:getHeight() do
 			local shiftX, shiftY = x + self.x, y + self.y
-			if self.map[x][y].visible then
+			if self.map[shiftX][shiftY].visible then
 				self.display:write(self.map[shiftX][shiftY].tile.symbol, x, y, self.map[shiftX][shiftY].tile.visiblefg)
-
-			elseif self.map[x][y].seen then
-
+			elseif self.map[shiftX][shiftY].seen then
 				self.display:write(self.map[shiftX][shiftY].tile.symbol, x, y, self.map[shiftX][shiftY].tile.seenfg)
 			end
 		end
@@ -121,8 +116,8 @@ function Map:drawMap()
 			else
 				--Draw the entity
 				self.display:write(entity.symbol, 
-								entity.x - self.x, 
-								entity.y - self.y, 
+								entity.x - self.x,
+								entity.y - self.y,
 								entity.fg, 
 								self.map[entity.x][entity.y].tile.visiblebg)--The map's background at the entity
 			end
@@ -147,12 +142,7 @@ end
 
 --Returns the x and y translated to its actual display position
 function Map:getDisplayPoint(x, y)
-	if x < self.x + self.display.widthInChars and
-	   x > self.x and
-	   y > self.y and
-	   y < self.y + self.display.heightInChars then
-	   	return x - self.x, y - self.y
-	end
+	return {x = x - self.x, y =  y - self.y}
 end
 
 --Moves the map so that it's drawn at a different point,
@@ -188,6 +178,14 @@ function Map:removeEntity(entity)
 			Logger.log('Removed entity of type ' .. entity.type, 3)
 			self.entities[uuid] = nil
 			return;
+		end
+	end
+end
+
+function Map:computeAI()
+	for _,entity in pairs(self.entities) do
+		if entity.ai then
+			entity:ai()
 		end
 	end
 end

@@ -66,6 +66,7 @@ function Cellular:create(callback)
     local born   =self._options.born
     local survive=self._options.survive
     local changed=false
+    self._map=newMap
 
     for j=1,self._height do
         for i=1,self._width do
@@ -79,7 +80,7 @@ function Cellular:create(callback)
             if not changed and newMap[i][j]~=self._map[i][j] then changed=true end
         end
     end
-    self._map=newMap
+
 
     if self._options.connected then
         self:_completeMaze()
