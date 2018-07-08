@@ -30,6 +30,10 @@ function Entity:move(direction)
 	return false
 end
 
+function Entity:canMove(direction)
+	return self.map:isPassable(self.x + direction.x, self.y + direction.y)
+end
+
 --entities should override these functions
 function Entity:onHit(other) return end
 function Entity:onDefend(other) return end

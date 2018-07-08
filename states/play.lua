@@ -26,16 +26,7 @@ function intro:init()
 	end
 
 	hero = Player:new(20, 20, '\35', COLORS.GREEN, COLORS.YELLOW, introMap)
-	mummy = Mummy:new(21, 21, '\40', COLORS.BROWN, COLORS.YELLOW, introMap)
-	for x = 1, introMap.width do
-		for y = 1, introMap.height do
-			if introMap:isPassable(x, y) then
-				hero.x = x
-				hero.y = y
-				break
-			end
-		end
-	end
+	bat = Bat:new(21, 21, '\38', COLORS.BROWN, COLORS.YELLOW, introMap)
 
 	--FOV light callback
 	lightCalbak = function(fov, x, y)
@@ -45,9 +36,20 @@ function intro:init()
 	digger:create(calbak)
 	fov = ROT.FOV.Precise:new(lightCalbak)
 
+	for x = 1, introMap.width do
+		for y = 1, introMap.height do
+			if introMap:isPassable(x, y) then
+				print(x, y)
+				hero.x = x
+				hero.y = y
+				introMap:move({x=x, y=y})
+				break
+			end
+		end
+	end
+
 	introMap:addEntity(hero)
-	introMap:addEntity(mummy)
-	introMap:setTile(10, 15, TileTypes.Wall)
+	introMap:addEntity(bat)
 
 	fov:compute(hero.x, hero.y, 6, fovCalbak)
 end

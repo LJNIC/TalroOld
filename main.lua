@@ -13,6 +13,7 @@ Mummy = require 'entities/mummy'
 Door = require 'entities/door'
 Map = require 'map'
 Player = require 'entities/player'
+Bat = require 'entities/bat'
 
 --Seeds the uuid creator for entities
 UUID.seed()

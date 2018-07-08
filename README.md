@@ -12,6 +12,3 @@
 
 ### Special thanks
 * [MCNoodlor](https://twitter.com/mcnoodlor) for some of his tiles 
-
-### And a sneak peek
-![alt text](https://github.com/LJNIC/Talro/blob/master/pyramid.png)

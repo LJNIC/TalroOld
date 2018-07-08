@@ -37,38 +37,57 @@ function Map:resetFOV()
 	end
 end
 
+--Returns the x and y translated to its actual display position
+function Map:getDisplayPoint(x, y)
+	return {x = x - self.x, y =  y - self.y}
+end
+
+--Returns whether a point is inside the map or not. 
+function Map:contains(x, y)
+	return x <= self.width and x > 0 and y <= self.height and y > 0 
+end
+
+function Map:displayContains(x, y)
+	local point = self:getDisplayPoint(x, y)
+	return self.display:contains(point.x, point.y)
+end
+
 --Sets a tile to visible
 function Map:visible(x, y)
-	if not self:isInside(x, y) then return end
+	if not self:contains(x, y) then return end
 	self.map[x][y].visible = true
 end
 
 --Sets a tile to be seen.
 function Map:see(x, y)
-	if not self:isInside(x, y) then return end
+	if not self:contains(x, y) then return end
 	self.map[x][y].seen = true
+end
+
+--Returns whether the tile is visible
+function Map:isVisible(x, y)
+	return self.map[x][y].visible
 end
 
 --sets a tile, only x and y are non-optional
 function Map:setTile(x, y, tileType)
-	if not self:isInside(x, y) then return end
+	if not self:contains(x, y) then return end
 	self.map[x][y].tile = tileType	
 end
 
-function Map:shouldMove(x, y)
-	local x, y = self:getDisplayPoint(x, y)
+--return location of player
+function Map:getPlayer()
+	for _,entity in pairs(self.entities) do
+		if entity.type == 'player' then
+			return {x=entity.x, y=entity.y}
+		end
+	end
 end
-
---Returns whether a point is inside the map or not. 
-function Map:isInside(x, y)
-	return x <= self.width and x > 0 and y <= self.height and y > 0 
-end
-
 --checks whether a tile contains a wall or an entity
 function Map:isPassable(x, y)
 	--If the point is outside the map
 	--
-	if not self:isInside(x, y) then return end
+	if not self:contains(x, y) then return end
 
 	--If there's an entity in the way
 	if self.map[x][y].tile.passable == 0 then
@@ -92,7 +111,7 @@ function Map:getEntityAt(x, y)
 	end
 end
 	
---writes the characters to the object, not to screen
+--writes the characters to the display canvas, not to screen
 function Map:drawMap()
 
 	self.display:clear()
@@ -109,18 +128,14 @@ function Map:drawMap()
 	end
 
 	for _,entity in pairs(self.entities) do
-		--Check if the entity is non-nil or if the entity is outside of the display area
-		if self.map[entity.x][entity.y].visible then
-			if entity.x == nil or not self:isInside(entity.x, entity.y) then
-				return 
-			else
-				--Draw the entity
-				self.display:write(entity.symbol, 
-								entity.x - self.x,
-								entity.y - self.y,
-								entity.fg, 
-								self.map[entity.x][entity.y].tile.visiblebg)--The map's background at the entity
-			end
+		--Check if the entity is visible and inside the display
+		if self.map[entity.x][entity.y].visible and self:displayContains(entity.x, entity.y) then
+			--Draw the entity
+			self.display:write(entity.symbol, 
+							   entity.x - self.x,
+							   entity.y - self.y,
+							   entity.fg, 
+							   self.map[entity.x][entity.y].tile.visiblebg)--The map's background at the entity
 		end
 	end
 end
@@ -138,11 +153,6 @@ function Map:drawCSV(x, y, csvfile, passables)
 		self:setTile(tile.x + x - 1, tile.y + y-1, tile.char, pass, tile.fore, tile.back)
 	end
 	self:drawMap()
-end
-
---Returns the x and y translated to its actual display position
-function Map:getDisplayPoint(x, y)
-	return {x = x - self.x, y =  y - self.y}
 end
 
 --Moves the map so that it's drawn at a different point,
@@ -182,6 +192,7 @@ function Map:removeEntity(entity)
 	end
 end
 
+--Call every entity in the map's ai function
 function Map:computeAI()
 	for _,entity in pairs(self.entities) do
 		if entity.ai then

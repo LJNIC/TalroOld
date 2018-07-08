@@ -1,3 +1,7 @@
+--[[
+The mummy is essentially a zombie. Moves slower than the player but can grab
+the player from a distance with its straps. Only moves orthogonally.
+--]]	
 Mummy = {}
 
 function Mummy:new(x, y, symbol, fg, bg, map)
@@ -8,13 +12,31 @@ function Mummy:new(x, y, symbol, fg, bg, map)
 end
 
 function Mummy:ai()
-	math.randomseed(os.time())
-	local axis = (math.random() > 0.5) and 'x' or 'y'
-	local direction = (math.random() > 0.5) and 1 or -1
-	if axis == 'x' then
-		self:move({x=direction, y=0})
+	--Pathfinding: Target player when in player's FOV, if not move randomly
+	if self.map:isVisible(self.x, self.y) then
+		local player = self.map:getPlayer()
+		local dx = player.x - self.x
+		local dy = player.y - self.y
+		if math.abs(dx) > math.abs(dy) then
+			if self:canMove({x=1, y=0}) then
+				self:move({x=1, y=0})
+			elseif self:canMove({x=-1, y=0}) then
+				dx = -1
+			end
+		else
+			
+		end
+		dx = Util.round(dx / distance)
+		dy = Util.round(dy / distance) 
+		self:move(dx, dy)
 	else
-		self:move({x=0, y=direction})
+		local axis = (math.random() > 0.5) and 'x' or 'y'
+		local direction = (math.random() > 0.5) and 1 or -1
+		if axis == 'x' then
+			self:move({x=direction, y=0})
+		else
+			self:move({x=0, y=direction})
+		end
 	end
 end
 

@@ -12,6 +12,10 @@ function keyToDirection(key)
 	end
 end
 
+function round(num)
+	return (num > 0.5) and 1 or 0
+end
+
 --returns a table with each entry a table
 --of values
 function parseCSV(csvfile)
