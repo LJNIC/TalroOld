@@ -7,15 +7,13 @@ logger = require 'logger'
 Map = class('Map')
 
 function Map:initialize(width, height, display)
-	self.display = ROT.Display:new(width, height, 1, spriteSheet, 16, 16, COLORS.YELLOW, COLORS.YELLOW, root)
+	self.display = display
 	self.map = {}
-	self.root = root
-	--generate a tunnel: width, height, tunnel length, roughness, windyness, max width, 
-	--whether to start at bottom or top 
 	self.width = width
 	self.height = height
 	self.entities = {}
 	self.numEntities = 0
+
 	for x = 1, self.width, 1 do
 			self.map[x] = {}
 		for y = 1, self.height, 1 do
@@ -62,23 +60,31 @@ function Map:getEntityAt(x, y)
 	end
 end
 	
-
 --writes the characters to the object, not to screen
 function Map:drawMap()
 	--write the terrain
-	for x = 1, self.width do
-		for y = 1, self.height, 1 do
+	for x = 1, self.display.widthInChars do
+		for y = 1, self.display.heightInChars, 1 do
 			self.display:write(self.map[x][y].symbol, x, y, self.map[x][y].fg, self.map[x][y].bg)
 		end
 	end
 	--write entities on top	
 	for i = 1, self.numEntities, 1 do
+		if self.entities[i].x > self.display.widthInChars or
+		   self.entities[i].x < 1 or
+		   self.entities[i].y > self.display.heightInChars or
+		   self.entities[i].y < 1 then
+			return 
+		end
 		self.display:write(self.entities[i].symbol, 
 							self.entities[i].x, 
 							self.entities[i].y, 
 							self.entities[i].fg, 
 							self.map[self.entities[i].x][self.entities[i].y].bg)--The map's background at the entity
 	end
+end
+
+function Map:moveWindow(dx, dy)
 end
 
 --renders the map onto the screen
