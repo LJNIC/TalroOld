@@ -1,8 +1,26 @@
 require 'util'
 local class = require 'lib/middleclass'
-logger = require 'logger'
 
-Player = class('Player', Entity)
+Player = class('Player')
+
+function Player:initialize(x, y, symbol, fg, bg, map)
+	self.x = x
+	self.y = y
+	self.symbol = symbol
+	self.fg = fg
+	self.bg = bg
+	self.map = map
+	self.map:addEntity(self)
+end
+
+function Player:move(direction)
+	if self.map:isPassable(self.x + direction.x, self.y + direction.y) == true then
+		self.x = self.x + direction.x
+		self.y = self.y + direction.y
+		return true
+	end
+	return false
+end
 
 --player's whip action: pulls an item/mob towards them
 function Player:whip(direction)
