@@ -1,21 +1,30 @@
 ROT = require 'lib/rotLove/rot' 
 COLORS = require 'colors'
+generator = require 'generator'
 Map = Class{}
 
 function Map:init(width, height, spriteSheet)
 	self.display = ROT.Display:new(width, height, 1, spriteSheet, 16, 16)
 	self.map = {}
+
+	--generate a tunnel: width, height, tunnel length, roughness, windyness, max width, 
+	--whether to start at bottom or top 
+	local generated = generator.generateTunnel(width, height, 45, 20, 20, 10, true)
 	self.width = width
 	self.height = height
 	self.entities = {}
 	self.numEntities = 0
 	for x = 1, self.width, 1 do
-		self.map[x] = {}
+			self.map[x] = {}
 		for y = 1, self.height, 1 do
-			--passable: 0 for true, 1 for non-wall, 2 for wall
-			self.map[x][y] = {symbol = ' ', passable = 0, fg = COLORS.YELLOW, bg = COLORS.YELLOW}
+				self.map[x][y] = {symbol = '\32', passable = 1, fg = COLORS.YELLOW, fg = COLORS.YELLOW}
+				self:setTile(x, y, '\32', 1, COLORS.YELLOW, COLORS.YELLOW)
+			if generated[x][y] == ' ' then
+				self:setTile(x, y, '\176', 0, COLORS.LIGHT_YELLOW, COLORS.YELLOW)
+			end
 		end
 	end
+				
 	self:drawMap()
 end
 
@@ -31,6 +40,7 @@ function Map:setTile(x, y, symbol, passable, fg, bg)
 	self.map[x][y].fg = fg
 	self.map[x][y].bg = bg
 end
+
 --checks whether a tile contains a wall or an entity
 function Map:isPassable(x, y)
 	if self.map[x][y].passable == 0 then
