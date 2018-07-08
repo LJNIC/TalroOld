@@ -1,7 +1,7 @@
 local play = {}
 
 function play:init()
-	local spriteSheet = love.graphics.newImage('tilesheet_15x15.png') 
+	local spriteSheet = love.graphics.newImage('assets/tilesheet_15x15.png') 
 	spriteSheet:setFilter('nearest', 'nearest')
 	Logger.log("Loaded graphics...", 1)
 
@@ -22,7 +22,7 @@ function play:init()
 		end
 	end
 
-	hero = Player:new(20, 20, '\35', COLORS.GREEN, COLORS.YELLOW, introMap)
+	hero = Player:new(20, 20, '\34', COLORS.GREEN, COLORS.YELLOW, introMap)
 	local bat = Mummy:new(21, 21, '\33', COLORS.WHITE, COLORS.YELLOW, introMap)
 
 	--FOV light callback
@@ -69,6 +69,8 @@ function play:keypressed(key, scancode, isrepeat)
 	elseif Options.actionKeys[key] then
 		Gamestate.switch(Options:keyToAction(key), hero)
 		return
+	elseif key == 'escape' then
+		Gamestate.switch(MenuState)
 	end
 end
 
