@@ -18,6 +18,8 @@ function Options.generateDefaults()
 	file:close()
 end
 
+
+
 --Loads options table from options.conf
 function Options:loadOptions()
 	optionsFile = io.open('options.conf', 'r')
@@ -46,6 +48,35 @@ function Options:loadOptions()
 	self.down = self.options.movement.down
 	self.left = self.options.movement.left
 	self.whip = self.options.actions.whip
+end
+
+function Options:reload()
+	self.options.movement.up = self.up
+	self.options.movement.down = self.down
+	self.options.movement.right = self.right
+	self.options.movement.left = self.left
+	self.options.actions.whip = self.whip
+
+	self.moveKeys = {}
+	for _,keys in pairs(self.options.movement) do
+		self.moveKeys[keys[1]] = true
+		self.moveKeys[keys[2]] = true	
+	end	
+	
+	self.actionKeys = {}
+	for _,keys in pairs(self.options.actions) do
+		self.actionKeys[keys[1]] = true
+	end	
+end
+
+function Options:containsKey(key)
+	return self.actionKeys[key] or self.moveKeys[key]	
+end
+
+function Options:save()
+	local file = io.open('options.conf', 'w')
+	file:write(Serpent.block(self.options, {comment = false}))
+	file:close()
 end
 				
 --returns a 'vector' unit based on the key

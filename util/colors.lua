@@ -8,6 +8,6 @@ BROWN = ROT.Color.fromString('#a9604c'),
 GREY = ROT.Color.fromString('#5f4d48'),
 GREEN = ROT.Color.fromString('#287051'),
 BLUE = ROT.Color.fromString('#74aec6'),
-DARK = ROT.Color.fromString('#3a383c')
+DARK = ROT.Color.fromString('#0c0502')
 }
 return colors

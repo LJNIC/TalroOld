@@ -1,8 +1,10 @@
 Menu = {}
 
-function Menu:enter()
+function Menu:init()
 	local spriteSheet = love.graphics.newImage('assets/tilesheet_15x15.png')
 	spriteSheet:setFilter('nearest', 'nearest')
+	menuFont = love.graphics.newFont('assets/BetterPixels.ttf', 48)
+
 	menuRoot = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 2, COLORS.YELLOW, COLORS.DARKEST, nil, spriteSheet, 15, 15)
 	menuRoot:write('\201')	
 	menuRoot:write('\187', SCREEN_WIDTH, 1)
@@ -16,7 +18,9 @@ function Menu:enter()
 		menuRoot:write('\186', 1, y)
 		menuRoot:write('\186', SCREEN_WIDTH, y)
 	end
-	menuFont = love.graphics.newFont('assets/BetterPixels.ttf', 48)
+end
+
+function Menu:enter()
 	title = love.graphics.newImage('assets/talro.png')
 	titleX = SCREEN_WIDTH*30/2 - 180
 	titleY = 60
@@ -35,13 +39,13 @@ function Menu:enter()
 		Gamestate.switch(PlayState)
 	end
 
-	quitButton = mainMenu:button('QUIT', {x = SCREEN_WIDTH*30/2 - 50, y = SCREEN_HEIGHT*30/2, w = 100, h = 35})
+	quitButton = mainMenu:button('QUIT', {x = SCREEN_WIDTH*30/2 - 50, y = SCREEN_HEIGHT*30/2 + 50, w = 100, h = 35})
 	quitButton.style = buttonStyle
 	quitButton.click = function(this, x, y)
 		love.event.quit()
 	end
 
-	optionButton = mainMenu:button('OPTIONS', {x = SCREEN_WIDTH*30/2 - 50, y = SCREEN_HEIGHT*30/2 + 50, w = 100, h = 35})
+	optionButton = mainMenu:button('OPTIONS', {x = SCREEN_WIDTH*30/2 - 50, y = SCREEN_HEIGHT*30/2, w = 100, h = 35})
 	optionButton.style = buttonStyle
 	optionButton.click = function(this, x, y)
 		Gamestate.switch(MenuOptions, menuRoot)
