@@ -2,28 +2,9 @@ menuOptions = {}
 
 function menuOptions:init()
 	options = GUI()
-	local menuFontMedium = love.graphics.newFont('assets/BetterPixels.ttf', 32)
-	local menuFontSmall = love.graphics.newFont('assets/BetterPixels.ttf', 20)
-	local labelStyle = {
-		font = menuFont, 
-		default = COLORS.DARKEST,
-		fg = COLORS.YELLOW,
-		hilitefg = COLORS.YELLOW,
-		hilite = COLORS.DARKEST
-	}
 
-	local labelStyleMedium = {
-		default = COLORS.DARKEST,
-		font = menuFontMedium, 
-		fg = COLORS.YELLOW,
-		hilitefg = COLORS.YELLOW,
-		hilite = COLORS.DARKEST
-	}
-
-	local menuFontSmall = love.graphics.newFont('assets/BetterPixels.ttf', 26)
 	movementLabel = options:button('Movement', {x = SCREEN_WIDTH*30/2 - 100, y = 50, w = 200, h = 35})
-	movementLabel.style = labelStyle
-	movementLabel.style.font = menuFont
+	movementLabel.style = Styles.labelStyle
 	local subLabelX = SCREEN_WIDTH * 30/2 - 150
 
 	local subLabels = {
@@ -34,7 +15,7 @@ function menuOptions:init()
 		options:button('Whip', {x = subLabelX, y = 320, w = 100, h = 35}) 
 	}
 
-	for _,label in pairs(subLabels) do label.style = labelStyleMedium end
+	for i = 1, #subLabels do subLabels[i].style = Styles.labelStyleMedium end
 
 	buttons = {
 		{options:button(Options.up[1], {x = SCREEN_WIDTH*30/2 - 50, y = 100, w = 50, h = 35}), 'up', 1},
@@ -48,15 +29,10 @@ function menuOptions:init()
 	}
 
 	keyChoice = {choosing = false, move = '', num = 0, button = nil}
-	infoLabel = options:text('', {x = 100, y = 400, w = 200})
 
 	for i = 1, #buttons do 
 		local button = buttons[i]
-		button[1].style.font = menuFontSmall
-		button[1].style.default = COLORS.BROWN
-		button[1].style.fg = COLORS.YELLOW
-		button[1].style.hilite = COLORS.BROWN
-		button[1].style.hilitefg = COLORS.WHITE
+		button[1].style = Styles.smallButtonStyle
 
 		button[1].click = function(this, x, y)
 			keyChoice.choosing = true
@@ -64,21 +40,29 @@ function menuOptions:init()
 			keyChoice.num = button[3]
 			keyChoice.button = button[1]
 			button[1].label = ''
-			infoLabel.label = 'Press a key'
+			infoLabel.label = 'Press a key to bind a key, or escape to cancel.'
 		end
 	end
+
+	infoLabel = options:text('', {x = 100, y = 400, w = 200})
+	infoLabel.style.default = COLORS.BROWN
+	infoLabel.style.bg = COLORS.BROWN
 	
 	actionsLabel = options:button('Actions', {x = SCREEN_WIDTH*30/2 - 100, y = 280, w = 200, h = 35})
-	actionsLabel.style = labelStyle
-
+	actionsLabel.style = Styles.labelStyle
 
 	backButton = options:button('Back', {x = SCREEN_WIDTH*30/2 - 100, y = 600, w = 200, h = 35})
-	backButton.style = buttonStyle
+	backButton.style = Styles.buttonStyle
 	backButton.click = function(this, x, y)
 		Options:save()
 		Gamestate.switch(MenuState)
 		Options:loadOptions()
 	end
+	prohibited = {
+		['backspace'] = true,
+		['capslock'] = true
+	}
+
 end
 
 function menuOptions:enter(previous, menuRoot)
@@ -96,7 +80,12 @@ end
 
 function menuOptions:keypressed(key, scancode, isrepeat)
 	if keyChoice.choosing then
-		if Options:containsKey(key) then
+		if prohibited[key] then
+			infoLabel.label = 'That key cannot be bound'
+			return 
+		elseif key == 'escape' then 
+			keyChoice.button.label = Options[keyChoice.move][keyChoice.num]
+		elseif Options:containsKey(key) then
 			keyChoice.button.label = Options[keyChoice.move][keyChoice.num]
 			infoLabel.label = 'That key is already bound'
 		else
