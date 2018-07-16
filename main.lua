@@ -20,6 +20,9 @@ AStar = require 'lib/lua-star'
 Serpent = require 'lib/serpent'
 Options = require 'options'
 GUI = require 'lib/Gspot'
+GameLog = require 'gameLog'
+
+love.graphics.setDefaultFilter('nearest', 'nearest')
 
 --Load options file
 Options:loadOptions()
@@ -28,8 +31,8 @@ Options:loadOptions()
 UUID.seed()
 
 --Height and width in tiles
-SCREEN_HEIGHT = 22
-SCREEN_WIDTH = 37
+SCREEN_HEIGHT = 25
+SCREEN_WIDTH = 45
 
 function love.load()
 	love.keyboard.setKeyRepeat(true)

@@ -1,12 +1,14 @@
 local play = {}
 
-function play:init()
-	local spriteSheet = love.graphics.newImage('assets/tilesheet_15x15.png') 
+function play:enter(previous)
+	local spriteSheet = love.graphics.newImage('assets/altsheet2_15x15.png') 
 	spriteSheet:setFilter('nearest', 'nearest')
 	Logger.log("Loaded graphics...", 1)
 
 	root = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 2, COLORS.YELLOW, COLORS.DARKEST, nil, spriteSheet, 15, 15)
-	digger = ROT.Map.Digger:new(SCREEN_WIDTH, SCREEN_HEIGHT + 20)
+	digger = ROT.Map.IceyMaze:new(SCREEN_WIDTH, SCREEN_HEIGHT + 20)
+	logDisplay = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 2, COLORS.YELLOW, {0, 0, 0, 0}, nil, spriteSheet, 15, 15)
+	log = GameLog:new(SCREEN_WIDTH, 6, logDisplay)
 
 	introMap = Map:new(SCREEN_WIDTH, SCREEN_HEIGHT + 20, root)
 	Logger.log("Loaded maps...", 1)
@@ -29,7 +31,7 @@ function play:init()
 		return hero.map:isPassable(x, y)
 	end
 
-	digger:create(calbak)
+	--digger:create(calbak)
 	fov = ROT.FOV.Precise:new(lightCalbak)
 
 	introMap:addEntity(hero)
@@ -63,6 +65,7 @@ end
 
 function play:draw()
 	hero.map:renderMap()
+	log.display:draw()
 end
 
 function play:update(dt)
