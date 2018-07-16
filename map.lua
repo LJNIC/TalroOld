@@ -19,7 +19,7 @@ function Map:new(width, height, display)
 	for x = 1, m.width do
 		m.map[x] = {}
 		for y = 1, m.height do
-			m.map[x][y] = {seen = false, tile = TileTypes.Wall}
+			m.map[x][y] = {seen = false, tile = TileTypes.Floor}
 		end
 	end
 	setmetatable(m, self)

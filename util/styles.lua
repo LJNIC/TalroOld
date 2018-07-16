@@ -2,7 +2,8 @@ Styles = {}
 
 Styles.menuFont = love.graphics.newFont('assets/BetterPixels.ttf', 48)
 Styles.menuFontMedium = love.graphics.newFont('assets/BetterPixels.ttf', 32)
-Styles.menuFontSmall = love.graphics.newFont('assets/BetterPixels.ttf', 28)
+Styles.menuFontSmall = love.graphics.newFont('assets/BetterPixels.ttf', 26)
+Styles.menuFontSmall:setFilter('nearest', 'nearest')
 
 Styles.labelStyle = {
 	font = Styles.menuFont, 

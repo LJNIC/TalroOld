@@ -10,7 +10,7 @@ function tileTypes:newTile(tileType, seenfg, visiblefg, passable, symbol)
 end
 
 tileTypes:newTile('Floor', COLORS.GREY, COLORS.WHITE, 0, '\13')
-tileTypes:newTile('Wall', COLORS.GREY, COLORS.YELLOW, 1, '\18')
+tileTypes:newTile('Wall', COLORS.GREY, COLORS.YELLOW, 1, '\3')
 tileTypes:newTile('Hero', COLORS.WHITE, COLORS.WHITE , 1, '\35')
 
 return tileTypes
