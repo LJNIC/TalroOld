@@ -33,6 +33,7 @@ function Display:init(w, h, scale, dfg, dbg, fullOrFlags, image, imgcw, imgch)
     self.oldChars = {{}}
     self.oldBackgroundColors = {{}}
     self.oldForegroundColors = {{}}
+	self.subDisplays = {}
     self.graphics = love.graphics
     love.window.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars, fullOrFlags)
     self.drawQ = self.graphics.draw
@@ -76,10 +77,24 @@ end
 
 --- Draw.
 -- The main draw function. This should be called from love.draw() to display any written characters to screen
-function Display:draw()
+function Display:draw(subDisplay)
+	local startX = 1
+	local endX = self.widthInChars
+	local startY = 1
+	local endY = self.heightInChars
+
+	if subDisplay then
+		assert(self.displays[subDisplay], "A sub display with name " .. subDisplay .. " does not exist.")
+		local subDisplay = self.displays[subDisplay]
+		startX = subDisplay.x
+		endX = subDisplay.x + subDisplay.width
+		startY = subDisplay.y
+		endY = subDisplay.y + subDisplay.height
+	end
+	
     self.graphics.setCanvas(self.canvas)
-    for x = 1,self.widthInChars do
-        for y = 1,self.heightInChars do
+    for x = startX, endX do
+        for y = startY, endY do
             local c = self.chars[x][y]
             local bg = self.backgroundColors[x][y]
             local fg = self.foregroundColors[x][y]
@@ -106,6 +121,14 @@ function Display:draw()
     self.graphics.setCanvas()
     self.graphics.setColor(1,1,1)
     self.graphics.draw(self.canvas)
+end
+
+function Display:addSubDisplay(width, height, x, y, name)
+	assert(self:contains(width + x), "Sub display must be within main display.")
+	assert(self:contains(height + y), "Sub display must be within main display.")
+	assert(not self.displays[name], "A sub display with name " .. name .. " already exists.")
+	--TODO: Check if sub displays intersect
+	self.subDisplays[name] = {width = width, height = height, x = x, y = y}	
 end
 
 --- Contains point.
