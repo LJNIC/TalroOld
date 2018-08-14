@@ -1,5 +1,7 @@
 Options = {}
 
+Options.prohibited = {'escape', 'backspace'}
+
 --Generates default options and writes them to options.conf
 function Options.generateDefaults()
 	local options = {

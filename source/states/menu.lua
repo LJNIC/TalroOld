@@ -58,6 +58,10 @@ function Menu:draw()
 	love.graphics.setColor(COLORS.BROWN)
 	love.graphics.draw(self.title.img, self.title.x, self.title.y)
 	if self.stateToSwitch then
+		if self.stateToSwitch == MenuOptions then
+			Gamestate.switch(self.stateToSwitch, self.display)
+			return
+		end
 		Gamestate.switch(self.stateToSwitch)
 	end
 end
