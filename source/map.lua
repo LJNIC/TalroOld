@@ -58,7 +58,7 @@ function Map:visible(x, y)
 	self.map[x][y].visible = true
 end
 
---Sets a tile to be seen.
+--Sets a tile to seen
 function Map:see(x, y)
 	if not self:contains(x, y) then return end
 	self.map[x][y].seen = true
@@ -150,7 +150,7 @@ function Map:drawCSV(x, y, csvfile, passables)
 	local tiles = Util.parseCSV(csvfile)
 	for _,tile in pairs(tiles) do
 		local pass = 1
-		for _, character in pairs(passables) do
+		for _,character in pairs(passables) do
 			if tile.char == character then
 				pass = 0
 			end
@@ -182,6 +182,7 @@ end
 function Map:addEntity(entity)
 	assert(type(entity) == 'table' and entity.uuid, "Not an entity!")
 	Logger.log('Added entity of type ' .. entity.type, 3)
+	entity.map = self
 	self.entities[entity.uuid] = entity
 end	
 
@@ -189,6 +190,7 @@ end
 function Map:removeEntity(entity)
 	assert(type(entity) == 'table' and entity.uuid, "Not an entity!")
 	if self.entities[entity.uuid] then 
+		self.entities[entity.uuid].map = nil
 		self.entities[entity.uuid] = nil
 	end
 end

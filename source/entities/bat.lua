@@ -1,8 +1,8 @@
 --The bat moves erratically (only diagonally) but doesn't attack the player.
 Bat = {}
 
-function Bat:new(x, y, symbol, fg, bg, map)
-	local b = Entity:new(x, y, symbol, fg, bg, map)
+function Bat:new(x, y, symbol, fg, bg)
+	local b = Entity:new(x, y, symbol, fg, bg)
 	b.type = 'bat'
 	b.ai = self.ai 
 	return b

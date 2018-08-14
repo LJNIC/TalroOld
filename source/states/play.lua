@@ -23,8 +23,8 @@ function play:enter(previous)
 		end
 	end
 
-	hero = Player:new(20, 20, '\41', COLORS.BLUE, COLORS.YELLOW, introMap)
-	local bat = Mummy:new(21, 21, '\33', COLORS.WHITE, COLORS.YELLOW, introMap)
+	hero = Player:new(20, 20, '\41', COLORS.BLUE, COLORS.YELLOW)
+	local bat = Mummy:new(21, 21, '\33', COLORS.WHITE, COLORS.YELLOW)
 
 	--FOV light callback
 	local lightCalbak = function(fov, x, y)

@@ -1,6 +1,6 @@
 Entity = {}
 --x position, y position, graphic, foreground, background
-function Entity:new(x, y, symbol, fg, bg, map)
+function Entity:new(x, y, symbol, fg, bg)
 	local e = {}
 	setmetatable(e, self)
 	self.__index = self
@@ -9,7 +9,7 @@ function Entity:new(x, y, symbol, fg, bg, map)
 	e.symbol = symbol
 	e.fg = fg
 	e.bg = bg
-	e.map = map
+	e.map = nil 
 	e.uuid = UUID()
 	e.status = {}
 	return e
