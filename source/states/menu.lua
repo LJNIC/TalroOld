@@ -2,9 +2,9 @@ Styles = require 'util/styles'
 Menu = {}
 
 function Menu:init()
-	local spriteSheet = love.graphics.newImage('assets/altsheet2_15x15.png')
-	spriteSheet:setFilter('nearest', 'nearest')
-	self.display = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 2, COLORS.YELLOW, COLORS.DARKEST, nil, spriteSheet, 15, 15)
+	self.spriteSheet = love.graphics.newImage('assets/altsheet2_15x15.png')
+	self.spriteSheet:setFilter('nearest', 'nearest')
+	self.display = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 2, COLORS.YELLOW, COLORS.DARKEST, nil, self.spriteSheet, 15, 15, true)
 	self.display:write('\201')	
 	self.display:write('\187', SCREEN_WIDTH, 1)
 	self.display:write('\200', 1, SCREEN_HEIGHT)
@@ -19,6 +19,8 @@ function Menu:init()
 		self.display:write('\186', 1, y)
 		self.display:write('\186', SCREEN_WIDTH, y)
 	end
+	self.display:draw(true)
+	self.background = love.graphics.newImage(self.display.canvas:newImageData())	
 
 	self.title = {
 		img = love.graphics.newImage('assets/talro.png'),
@@ -53,13 +55,14 @@ function Menu:enter(previous)
 end
 
 function Menu:draw()
-	self.display:draw()
+	love.graphics.setColor(1, 1, 1, 1)
+	love.graphics.draw(self.background)
 	self.menu:draw()
 	love.graphics.setColor(COLORS.BROWN)
 	love.graphics.draw(self.title.img, self.title.x, self.title.y)
 	if self.stateToSwitch then
 		if self.stateToSwitch == MenuOptions then
-			Gamestate.switch(self.stateToSwitch, self.display)
+			Gamestate.switch(self.stateToSwitch, self.background)
 			return
 		end
 		Gamestate.switch(self.stateToSwitch)

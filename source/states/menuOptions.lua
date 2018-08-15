@@ -68,13 +68,14 @@ function menuOptions:init()
 	self.stateToSwitch = nil
 end
 
-function menuOptions:enter(previous, display)
+function menuOptions:enter(previous, background)
 	self.stateToSwitch = nil
-	self.display = display
+	self.background = background 
 end
 
 function menuOptions:draw()
-	self.display:draw()
+	love.graphics.setColor(1, 1, 1, 1)
+	love.graphics.draw(self.background)
 	self.menu:draw()
 
 	if self.stateToSwitch then

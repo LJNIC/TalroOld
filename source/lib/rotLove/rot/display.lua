@@ -16,8 +16,9 @@ local Display = ROT.Class:extend("Display")
 -- @tparam[opt=cp437.png] love image CP437 font image 
 -- @tparam[opt=12] int imgcw Width of the image's characters 
 -- @tparam[opt=12] int imgch Height of the image's characters
+-- @tparam[opt=false] boolean noWindow Whether to setMode or not
 -- @return nil
-function Display:init(w, h, scale, dfg, dbg, fullOrFlags, image, imgcw, imgch)
+function Display:init(w, h, scale, dfg, dbg, fullOrFlags, image, imgcw, imgch, window)
     self.__name = 'Display'
     self.widthInChars = w and w or 80
     self.heightInChars = h and h or 24
@@ -33,9 +34,11 @@ function Display:init(w, h, scale, dfg, dbg, fullOrFlags, image, imgcw, imgch)
     self.oldChars = {{}}
     self.oldBackgroundColors = {{}}
     self.oldForegroundColors = {{}}
-	self.subDisplays = {}
+	 self.subDisplays = {}
     self.graphics = love.graphics
-    love.window.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars, fullOrFlags)
+	 if window then
+    	love.window.setMode(self.charWidth*self.widthInChars, self.charHeight*self.heightInChars, fullOrFlags)
+	 end
     self.drawQ = self.graphics.draw
 
     self.defaultForegroundColor = dfg or { 0.9215686274509803, 
@@ -77,7 +80,7 @@ end
 
 --- Draw.
 -- The main draw function. This should be called from love.draw() to display any written characters to screen
-function Display:draw(subDisplay)
+function Display:draw(noDraw, subDisplay)
 	local startX = 1
 	local endX = self.widthInChars
 	local startY = 1
@@ -119,8 +122,9 @@ function Display:draw(subDisplay)
         end
     end
     self.graphics.setCanvas()
-    self.graphics.setColor(1,1,1)
-    self.graphics.draw(self.canvas)
+    self.graphics.setColor(1, 1, 1, 1)
+	 if noDraw then return end
+	 self.graphics.draw(self.canvas)
 end
 
 function Display:addSubDisplay(width, height, x, y, name)
