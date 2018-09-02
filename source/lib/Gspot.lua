@@ -876,6 +876,32 @@ Gspot.button = {
 }
 setmetatable(Gspot.button, {__index = Gspot.util, __call = Gspot.button.load})
 
+Gspot.textbutton = {
+	load = function(this, Gspot, label, pos, parent, autosize)
+		if autosize then this.autosize = autosize end
+		return Gspot:add(Gspot:element('button', label, pos, parent))
+	end,
+	draw = function(this, pos)
+		if this.parent and this.value == this.parent.value then
+			if this == this.Gspot.mousein then setColor(this.style.focus)
+			else setColor(this.style.hilite) end
+		else
+			if this == this.Gspot.mousein then setColor(this.style.hilite)
+			else setColor(this.style.default) end
+		end
+		if this == this.Gspot.mousein then setColor(this.style.hilitefg)
+		else setColor(this.style.labelfg or this.style.fg) end
+		if this.shape == 'circle' then
+			if this.img then this:drawimg(pos) end
+			if this.label then lgprint(this.label, (pos.x + pos.r) - (this.style.font:getWidth(this.label) / 2), (this.img and (pos.y + (pos.r * 2)) + ((this.style.unit - this.style.font:getHeight()) / 2)) or (pos.y + pos.r) - (this.style.font:getHeight() / 2)) end
+		else
+			if this.img then this:drawimg(pos) end
+			if this.label then lgprint(this.label, (pos.x + (pos.w / 2)) - (this.style.font:getWidth(this.label) / 2), (this.img and pos.y + ((this.style.unit - this.style.font:getHeight()) / 2)) or (pos.y + (pos.h / 2)) - (this.style.font:getHeight() / 2)) end
+		end
+	end,
+}
+setmetatable(Gspot.textbutton, {__index = Gspot.util, __call = Gspot.textbutton.load})
+
 Gspot.imgbutton = {
 	load = function(this, Gspot, label, pos, parent, img)
 		local element = Gspot:button(label, pos, parent)
