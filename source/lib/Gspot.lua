@@ -879,7 +879,7 @@ setmetatable(Gspot.button, {__index = Gspot.util, __call = Gspot.button.load})
 Gspot.textbutton = {
 	load = function(this, Gspot, label, pos, parent, autosize)
 		if autosize then this.autosize = autosize end
-		return Gspot:add(Gspot:element('button', label, pos, parent))
+		return Gspot:add(Gspot:element('textbutton', label, pos, parent))
 	end,
 	draw = function(this, pos)
 		if this.parent and this.value == this.parent.value then
