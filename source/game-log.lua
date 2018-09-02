@@ -6,7 +6,6 @@ function gameLog:new(width, height, display)
 	gl.height = height
 	gl.display = display
 
-	print(gl.display.widthInChars - height)
 	gl.display:write('\201', 1, gl.display.heightInChars - height)	
 	gl.display:write('\187', width, gl.display.heightInChars - height)
 	gl.display:write('\200', 1, gl.display.heightInChars)
@@ -25,7 +24,6 @@ function gameLog:new(width, height, display)
 end
 
 function gameLog:draw()
-	print(self.height)
 	self.display:draw()
 end
 
