@@ -6,24 +6,24 @@ function Pause:init()
 	self.stateToSwitch = nil
 
 	self.resumeButton = self.menu:textbutton('RESUME', {x = SCREEN_WIDTH*30/2 - 50, y = SCREEN_HEIGHT*30/2 - 100, w = 100, h = 35})
-	self.resumeButton.style = Styles.pauseButtonStyle
+	self.resumeButton.style = Styles.buttonStyle
 	self.resumeButton.click = function(this, x, y)
 		self.stateToSwitch = PlayState
 	end
 
 	self.menuButton = self.menu:textbutton('QUIT TO MENU', {x = SCREEN_WIDTH*30/2 - 50, y = SCREEN_HEIGHT*30/2 - 50, w = 100, h = 35})
-	self.menuButton.style = Styles.pauseButtonStyle
+	self.menuButton.style = Styles.buttonStyle
 	self.menuButton.click = function(this, x, y)
 		self.stateToSwitch = MenuState
 	end
 
 	self.optionButton = self.menu:textbutton('OPTIONS', {x = SCREEN_WIDTH*30/2 - 50, y = SCREEN_HEIGHT*30/2, w = 100, h = 35})
-	self.optionButton.style = Styles.pauseButtonStyle
+	self.optionButton.style = Styles.buttonStyle
 	self.optionButton.click = function(this, x, y)
 		self.stateToSwitch = PauseOptionsState
 	end
 	self.quitButton = self.menu:textbutton('QUIT GAME', {x = SCREEN_WIDTH*30/2 - 50, y = SCREEN_HEIGHT*30/2 + 50, w = 100, h = 35})
-	self.quitButton.style = Styles.pauseButtonStyle
+	self.quitButton.style = Styles.buttonStyle
 	self.quitButton.click = function(this, x, y)
 		love.event.quit()
 	end

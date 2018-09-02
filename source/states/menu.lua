@@ -20,7 +20,7 @@ function Menu:init()
 		self.display:write('\186', SCREEN_WIDTH, y)
 	end
 	self.display:draw(true)
-	self.background = love.graphics.newImage(self.display.canvas:newImageData())	
+	background = love.graphics.newImage(self.display.canvas:newImageData())	
 
 	self.title = {
 		img = love.graphics.newImage('assets/talro.png'),
@@ -56,7 +56,7 @@ end
 
 function Menu:draw()
 	love.graphics.setColor(1, 1, 1, 1)
-	love.graphics.draw(self.background)
+	love.graphics.draw(background)
 	self.menu:draw()
 	love.graphics.setColor(COLORS.BROWN)
 	love.graphics.draw(self.title.img, self.title.x, self.title.y)

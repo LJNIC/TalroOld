@@ -4,22 +4,19 @@ function play:enter(previous)
 	local spriteSheet = love.graphics.newImage('assets/altsheet2_15x15.png') 
 	spriteSheet:setFilter('nearest', 'nearest')
 	Logger.log("Loaded graphics...", 1)
+	
+	self.root = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 2, COLORS.YELLOW, COLORS.DARKEST, nil, spriteSheet, 15, 15)
 
-	root = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 2, COLORS.YELLOW, COLORS.DARKEST, nil, spriteSheet, 15, 15)
-	digger = ROT.Map.IceyMaze:new(SCREEN_WIDTH, SCREEN_HEIGHT + 20)
-	logDisplay = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 2, COLORS.YELLOW, {0, 0, 0, 0}, nil, spriteSheet, 15, 15)
-	log = GameLog:new(SCREEN_WIDTH, 6, logDisplay)
-
-	introMap = Map:new(SCREEN_WIDTH, SCREEN_HEIGHT + 20, root)
+	self.floorOne = Map:new(SCREEN_WIDTH, SCREEN_HEIGHT, self.root)
 	Logger.log("Loaded maps...", 1)
 
 	--Digger map callback function
 	local calbak = function(x, y, val)
 		local char = ' '
 		if val == 0 then 
-			introMap:setTile(x, y, TileTypes.Floor)
+			self.floorOne:setTile(x, y, TileTypes.Floor)
 		else
-			introMap:setTile(x, y, TileTypes.Wall)
+			self.floorOne:setTile(x, y, TileTypes.Wall)
 		end
 	end
 
@@ -30,15 +27,16 @@ function play:enter(previous)
 	local lightCalbak = function(fov, x, y)
 		return hero.map:isPassable(x, y)
 	end
-
-	--digger:create(calbak)
+	local digger = ROT.Map.Digger(SCREEN_WIDTH, SCREEN_HEIGHT)
+	digger:create(calbak)
 	fov = ROT.FOV.Precise:new(lightCalbak)
 
-	introMap:addEntity(hero)
-	introMap:addEntity(bat)
+	self.floorOne:addEntity(hero)
+	self.floorOne:addEntity(bat)
 
 	fov:compute(hero.x, hero.y, 6, fovCalbak)
 	acted = false
+	self.stateToSwitch = nil
 end
 
 --fov callback, sets the map tile to seen and visible
@@ -56,16 +54,18 @@ function play:keypressed(key, scancode, isrepeat)
 			acted = true
 		end
 	elseif Options.actionKeys[key] then
-		Gamestate.switch(Options:keyToAction(key), hero)
-		return
+		self.stateToSwitch = Options:keyToAction(key)
 	elseif key == 'escape' then
-		Gamestate.switch(MenuState)
+		self.stateToSwitch = PauseState
 	end
 end
 
 function play:draw()
 	hero.map:renderMap()
-	log.display:draw()
+
+	if self.stateToSwitch then
+		Gamestate.switch(self.stateToSwitch)
+	end
 end
 
 function play:update(dt)
