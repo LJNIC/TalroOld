@@ -1,4 +1,4 @@
-## Talro
+# Talro
 A LÖVE roguelike in early development
 
 ### Expected features
