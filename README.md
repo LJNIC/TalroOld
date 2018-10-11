@@ -1,4 +1,5 @@
-## A LÖVE Roguelike. Still in early development.
+## Talro
+A LÖVE roguelike in early development
 
 ### Expected features
 * A generated pyramid to explore
