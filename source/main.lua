@@ -24,6 +24,8 @@ Options = require 'options'
 GUI = require 'lib/Gspot'
 GameLog = require 'game-log'
 
+local showDebug = false
+
 love.graphics.setDefaultFilter('nearest', 'nearest')
 
 --Load options file
@@ -36,10 +38,13 @@ UUID.seed()
 SCREEN_HEIGHT = 25
 SCREEN_WIDTH = 45
 
-function love.load()
+function love.load(arg)
 	love.keyboard.setKeyRepeat(true)
 	Logger.init()
 	Gamestate.switch(MenuState)
+	if arg[1] == 'debug' then
+		showDebug = true
+	end
 end
 
 function love.textinput(t)
@@ -64,4 +69,7 @@ end
 
 function love.draw() 
 	Gamestate.draw()
+	if showDebug then
+		love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 10, 10)
+	end
 end
