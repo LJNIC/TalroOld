@@ -1,6 +1,6 @@
 local play = {}
 
-function play:enter(previous)
+function play:init()
 	local spriteSheet = love.graphics.newImage('assets/altsheet2_15x15.png') 
 	spriteSheet:setFilter('nearest', 'nearest')
 	Logger.log("Loaded graphics...", 1)
@@ -36,6 +36,10 @@ function play:enter(previous)
 
 	fov:compute(hero.x, hero.y, 6, fovCalbak)
 	acted = false
+	self.stateToSwitch = nil
+end
+
+function play:enter(previous)
 	self.stateToSwitch = nil
 end
 

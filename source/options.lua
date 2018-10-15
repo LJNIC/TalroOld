@@ -1,6 +1,12 @@
 Options = {}
 
-Options.prohibited = {'escape', 'backspace'}
+--keys that cannot be bound
+Options.prohibited = {
+		backspace = true, 
+		capslock = true, 
+		tab = true, 
+		shift = true
+}
 
 --Generates default options and writes them to options.conf
 function Options.generateDefaults()

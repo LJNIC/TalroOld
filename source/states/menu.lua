@@ -46,7 +46,7 @@ function Menu:init()
 	self.optionButton = self.menu:button('OPTIONS', {x = SCREEN_WIDTH*30/2 - 50, y = SCREEN_HEIGHT*30/2, w = 100, h = 35})
 	self.optionButton.style = Styles.buttonStyle
 	self.optionButton.click = function(this, x, y)
-		self.stateToSwitch = MenuOptions
+		self.stateToSwitch = MenuOptionsState
 	end
 end
 
