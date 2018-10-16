@@ -24,8 +24,8 @@ function Menu:init()
 
 	self.title = {
 		img = love.graphics.newImage('assets/talro.png'),
-		x = SCREEN_WIDTH * 30/2 - 180,
-		y = 60
+		x = (SCREEN_WIDTH * 15/2) - 180,
+		y = 45
 	}
 
 	self.menu = GUI()
@@ -43,7 +43,7 @@ function Menu:init()
 		love.event.quit()
 	end
 
-	self.optionButton = self.menu:button('OPTIONS', {x = SCREEN_WIDTH*30/2 - 50, y = SCREEN_HEIGHT*30/2, w = 100, h = 35})
+	self.optionButton = self.menu:button('OPTIONS', {x = SCREEN_WIDTH*30/2 - 75, y = SCREEN_HEIGHT*30/2, w = 150, h = 35})
 	self.optionButton.style = Styles.buttonStyle
 	self.optionButton.click = function(this, x, y)
 		self.stateToSwitch = MenuOptionsState
@@ -59,7 +59,9 @@ function Menu:draw()
 	love.graphics.draw(background)
 	self.menu:draw()
 	love.graphics.setColor(COLORS.BROWN)
+	love.graphics.scale(2, 2)
 	love.graphics.draw(self.title.img, self.title.x, self.title.y)
+	love.graphics.scale(1, 1)
 	if self.stateToSwitch then
 		if self.stateToSwitch == MenuOptions then
 			Gamestate.switch(self.stateToSwitch, self.background)
