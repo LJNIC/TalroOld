@@ -13,6 +13,7 @@ function Mummy:new(x, y, symbol, fg, bg, map)
 	m.pathcount = 0
 	m.range = 5
 	m.grab = self.grab
+	m.grabCooldown = 0
 	return m
 end
 
@@ -24,12 +25,14 @@ function Mummy:ai()
 		--Check if player is within range to grab and grab them if they are
 		local dx = player.x - self.x
 		local dy = player.y - self.y
-		if dx == 0 and math.abs(dy) < self.range then
+		if dx == 0 and math.abs(dy) < self.range and self.grabCooldown == 0 then
 			self:grab({x=0, y = (dy > 0) and 1 or -1})
+			self.grabCooldown = 4
 			self.turn = not self.turn
 			return
-		elseif dy == 0 and math.abs(dx) < self.range then
+		elseif dy == 0 and math.abs(dx) < self.range and self.grabCooldown == 0 then
 			self:grab({x = (dx > 0) and 1 or -1, y=0})
+			self.grabCooldown = 4
 			self.turn = not self.turn
 			return
 		end
@@ -55,12 +58,19 @@ function Mummy:ai()
 			self:move({x = axis == 1 and direction or 0, y = axis == -1 and direction or 0})
 		end
 	end
+
+	if self.grabCooldown > 0 then
+		self.grabCooldown = self.grabCooldown - 1
+	end
+
+	Logger.log('Mummy grab cooldown: ' .. self.grabCooldown, 3)
 		
 	--Toggle whether the mummy takes a turn to make them go half as fast
 	self.turn = not self.turn
 end
 
 function Mummy:grab(direction)
+	Logger.log('Mummy grabbed player!', 3)
 	for i = 1, 4 do
 		dx, dy = Util.multVector(direction.x, direction.y, i, i)
 		if not self.map:isPassable(self.x + dx, self.y + dy) then
