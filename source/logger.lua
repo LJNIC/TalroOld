@@ -1,7 +1,8 @@
 logger = {}
 logger.levels = {"INFO", "ERROR", "DEBUG"}
 
-function init()
+function init(printOutput)
+	logger.printOutput = printOutput
 	local file = io.open("Talro-logs/") 
 	if file == nil then
 		os.execute("mkdir " .. "Talro-logs")
@@ -29,6 +30,9 @@ function log(message, level)
 	if not logger.levels[level] then return end
 
 	local logMessage = "[" .. os.date("%X") .. "]" .. "[" .. logger.levels[level] .. "]" .. " " .. message .. "\n"
+	if logger.printOutput then
+		print(logMessage)
+	end
 	logger.logFile:write(logMessage)
 end
 
