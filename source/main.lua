@@ -39,12 +39,12 @@ SCREEN_HEIGHT = 25
 SCREEN_WIDTH = 45
 
 function love.load(arg)
-	love.keyboard.setKeyRepeat(true)
-	Logger.init()
-	Gamestate.switch(MenuState)
 	if arg[1] == 'debug' then
 		showDebug = true
 	end
+	love.keyboard.setKeyRepeat(true)
+	Logger.init(showDebug)
+	Gamestate.switch(MenuState)
 end
 
 function love.textinput(t)
