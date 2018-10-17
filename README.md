@@ -16,7 +16,7 @@ A LÖVE roguelike in early development
 ### Special thanks
 * [MCNoodlor](https://twitter.com/mcnoodlor) for some of his tiles 
 
-### A sneak peak
+### A sneak peek
 
 ![Game](screenshots/game.png)
 
