@@ -5,17 +5,18 @@ function init(printOutput)
 	logger.printOutput = printOutput
 	local file = io.open("Talro-logs/") 
 	if file == nil then
-		os.execute("mkdir " .. "Talro-logs")
+		love.filesystem.mkdir("Talro-logs")
 	end
 
+	local date = os.date("%d-%m-%Y")
 	local count = 1
 	for _, file in pairs(love.filesystem.getDirectoryItems("Talro-logs/")) do
-		if string.gmatch(file, os.date("%d-%m-%Y")) then
+		if string.find(file, date, 1, true) then
 			count = count + 1
 		end
 	end
 
-	local filename = "Talro-logs/" .. tostring(os.date("%d-%m-%Y")) .. "-" .. count .. ".log"
+	local filename = "Talro-logs/" .. date .. "-" .. count .. ".log"
 	logger.logFile = io.open(filename, "w")
 	log("Log starting...", 1)
 end
