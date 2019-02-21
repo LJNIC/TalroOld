@@ -1,14 +1,13 @@
 --Global libraries/utilities/classes
 ROT = require 'lib/rotLove/rot'
-UUID = require 'lib/uuid'
 COLORS = require 'util/colors'
-TileTypes = require 'util/tile-types'
 Logger = require 'logger'
 Gamestate = require 'lib/gamestate'
 PlayState = require 'states/play'
 WhipState = require 'states/play-whip'
 MenuState = require 'states/menu'
 PauseState = require 'states/pause'
+UUID = require 'lib/uuid'
 MenuOptionsState = require 'states/menu-options'
 PauseOptionsState = require 'states/pause-options'
 Util = require 'util/util'
@@ -22,7 +21,6 @@ AStar = require 'lib/lua-star'
 Serpent = require 'lib/serpent'
 Options = require 'options'
 GUI = require 'lib/Gspot'
-GameLog = require 'game-log'
 
 local showDebug = false
 
@@ -32,8 +30,7 @@ love.graphics.setDefaultFilter('nearest', 'nearest')
 Options:loadOptions()
 
 --Seed the uuid creator for entities
-UUID.seed()
-
+UUID.seed() 
 --Height and width in tiles
 SCREEN_HEIGHT = 25
 SCREEN_WIDTH = 45
@@ -70,6 +67,7 @@ end
 function love.draw() 
 	Gamestate.draw()
 	if showDebug then
-		love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 10, 10)
+		love.graphics.print("Current FPS: " .. tostring(love.timer.getFPS( )), 10, 10)
+		love.graphics.print("Current garbage: " .. collectgarbage('count') .. ' KB', 10, 30)
 	end
 end
