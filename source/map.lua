@@ -1,10 +1,11 @@
+TileTypes = require 'util/tile-types'
 --[[
 The map keeps track of the entities, walls, obstacles etc in the game.
 Entities are stored as a list of uuid, entity pairs.
 The map can be moved around and drawn from different points.
 The map's display is controlled by rotLove's display class.
 --]]
-Map = {}
+local Map = {}
 
 --Creates a map. A display is a rotLove Display class.
 function Map:new(width, height, display)
@@ -78,6 +79,15 @@ end
 function Map:centerOn(x, y)
 	if not self:contains(x, y) then return end
 	
+end
+
+function Map:getEntityInDirection(direction, position)
+	for i = 1, 4 do
+		local dx, dy = Util.multVector(direction.x, direction.y, i, i)
+		if not self.map:isPassable(position.x + dx, position.y + dy) then
+			return self:getEntityAt(position.x + dx, position.y + dy)
+		end
+	end
 end
 
 --return location of player
