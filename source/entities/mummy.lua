@@ -2,7 +2,7 @@
 The mummy is essentially a zombie. Moves slower than the player but can grab
 the player from a distance with its straps. Only moves orthogonally.
 --]]	
-Mummy = {}
+local Mummy = {}
 
 function Mummy:new(x, y, symbol, fg, bg, map)
 	local m = Entity:new(x, y, symbol, fg, bg, map)

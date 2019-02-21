@@ -1,4 +1,4 @@
-Player = {}
+local Player = {}
 
 function Player:new(x, y, symbol, fg, bg)
 	local p = Entity:new(x, y, symbol, fg, bg)
@@ -6,11 +6,20 @@ function Player:new(x, y, symbol, fg, bg)
 	p.type = 'player'
 	p.onHit = self.onHit
 	p.shouldMove = self.shouldMove
+	p.whipAction = 'attack'
 	return p
 end
 
---player's whip action: pulls an item/mob towards them
 function Player:whip(direction)
+	if self.whipAction == 'attack' then
+		self:attack(direction)
+	elseif self.whipAction == 'grab' then
+		self:grab(direction)
+	end
+end
+
+--player's whip grab: pulls an item/mob towards them
+function Player:grab(direction)
 	for i = 1, 4 do
 		dx, dy = Util.multVector(direction.x, direction.y, i, i)
 		if not self.map:isPassable(self.x + dx, self.y + dy) then

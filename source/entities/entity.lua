@@ -1,4 +1,5 @@
-Entity = {}
+local UUID = require('lib/uuid')
+local Entity = {}
 --x position, y position, graphic, foreground, background
 function Entity:new(x, y, symbol, fg, bg)
 	local e = {}

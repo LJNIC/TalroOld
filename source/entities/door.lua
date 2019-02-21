@@ -1,4 +1,4 @@
-Door = {}
+local Door = {}
 
 --The door entity requires a map that it points to, and what position on that map
 function Door:new(x, y, symbol, fg, bg, nextMap, nextX, nextY)

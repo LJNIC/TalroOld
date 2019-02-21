@@ -1,5 +1,5 @@
 --The bat moves erratically (only diagonally) but doesn't attack the player.
-Bat = {}
+local Bat = {}
 
 function Bat:new(x, y, symbol, fg, bg)
 	local b = Entity:new(x, y, symbol, fg, bg)

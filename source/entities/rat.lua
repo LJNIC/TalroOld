@@ -1,5 +1,5 @@
 --Rats are small, quick, and travel in packs.
-Rat = {}
+local Rat = {}
 
 function Rat:new(x, y, symbol, fg, bg)
 	local r = Entity:new(x, y, symbol, fg, bg)
