@@ -1,11 +1,12 @@
+local TileTypes = require 'util/tile-types'
 local play = {}
 
 function play:init()
-	local spriteSheet = love.graphics.newImage('assets/altsheet2_15x15.png') 
+	local spriteSheet = love.graphics.newImage('assets/tilesheet_15x15.png') 
 	spriteSheet:setFilter('nearest', 'nearest')
 	Logger.log("Loaded graphics...", 1)
 	
-	self.root = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 2, COLORS.YELLOW, COLORS.DARKEST, nil, spriteSheet, 15, 15)
+	self.root = ROT.Display:new(SCREEN_WIDTH, SCREEN_HEIGHT, 2, COLORS.YELLOW, COLORS.DARKEST, nil, spriteSheet, 15, 15, true)
 
 	self.floorOne = Map:new(SCREEN_WIDTH, SCREEN_HEIGHT, self.root)
 	Logger.log("Loaded maps...", 1)

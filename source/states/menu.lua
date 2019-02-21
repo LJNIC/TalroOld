@@ -1,4 +1,5 @@
 Styles = require 'util/styles'
+
 Menu = {}
 
 function Menu:init()
@@ -31,19 +32,19 @@ function Menu:init()
 	self.menu = GUI()
 	self.stateToSwitch = nil
 
-	self.playButton = self.menu:button('PLAY', {x = SCREEN_WIDTH*30/2 - 50, y = SCREEN_HEIGHT*30/2 - 50, w = 100, h = 35})
+	self.playButton = self.menu:button('PLAY', {x = SCREEN_WIDTH*30/2 - 50, y = SCREEN_HEIGHT*30/2 - 25, w = 100, h = 35})
 	self.playButton.style = Styles.buttonStyle
 	self.playButton.click = function(this, x, y)
 		self.stateToSwitch = PlayState
 	end
 
-	self.quitButton = self.menu:button('QUIT', {x = SCREEN_WIDTH*30/2 - 50, y = SCREEN_HEIGHT*30/2 + 50, w = 100, h = 35})
+	self.quitButton = self.menu:button('QUIT', {x = SCREEN_WIDTH*30/2 - 50, y = SCREEN_HEIGHT*30/2 + 75, w = 100, h = 35})
 	self.quitButton.style = Styles.buttonStyle
 	self.quitButton.click = function(this, x, y)
 		love.event.quit()
 	end
 
-	self.optionButton = self.menu:button('OPTIONS', {x = SCREEN_WIDTH*30/2 - 75, y = SCREEN_HEIGHT*30/2, w = 150, h = 35})
+	self.optionButton = self.menu:button('OPTIONS', {x = SCREEN_WIDTH*30/2 - 75, y = SCREEN_HEIGHT*30/2 + 25, w = 150, h = 35})
 	self.optionButton.style = Styles.buttonStyle
 	self.optionButton.click = function(this, x, y)
 		self.stateToSwitch = MenuOptionsState

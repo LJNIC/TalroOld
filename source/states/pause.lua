@@ -11,18 +11,18 @@ function Pause:init()
 		self.stateToSwitch = PlayState
 	end
 
-	self.menuButton = self.menu:textbutton('QUIT TO MENU', {x = SCREEN_WIDTH*30/2 - 50, y = SCREEN_HEIGHT*30/2 - 50, w = 100, h = 35})
+	self.menuButton = self.menu:textbutton('QUIT TO MENU', {x = SCREEN_WIDTH*30/2 - 100, y = SCREEN_HEIGHT*30/2 - 50, w = 200, h = 35})
 	self.menuButton.style = Styles.buttonStyle
 	self.menuButton.click = function(this, x, y)
 		self.stateToSwitch = MenuState
 	end
 
-	self.optionButton = self.menu:textbutton('OPTIONS', {x = SCREEN_WIDTH*30/2 - 50, y = SCREEN_HEIGHT*30/2, w = 100, h = 35})
+	self.optionButton = self.menu:textbutton('OPTIONS', {x = SCREEN_WIDTH*30/2 - 65, y = SCREEN_HEIGHT*30/2, w = 125, h = 35})
 	self.optionButton.style = Styles.buttonStyle
 	self.optionButton.click = function(this, x, y)
 		self.stateToSwitch = PauseOptionsState
 	end
-	self.quitButton = self.menu:textbutton('QUIT GAME', {x = SCREEN_WIDTH*30/2 - 50, y = SCREEN_HEIGHT*30/2 + 50, w = 100, h = 35})
+	self.quitButton = self.menu:textbutton('QUIT GAME', {x = SCREEN_WIDTH*30/2 - 75, y = SCREEN_HEIGHT*30/2 + 50, w = 150, h = 35})
 	self.quitButton.style = Styles.buttonStyle
 	self.quitButton.click = function(this, x, y)
 		love.event.quit()
