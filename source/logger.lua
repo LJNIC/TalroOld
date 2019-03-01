@@ -3,9 +3,8 @@ logger.levels = {"INFO", "ERROR", "DEBUG"}
 
 function init(printOutput)
 	logger.printOutput = printOutput
-	local file = io.open("Talro-logs/") 
-	if file == nil then
-		love.filesystem.mkdir("Talro-logs")
+	if not love.filesystem.getInfo("Talro-logs/") then
+		love.filesystem.createDirectory("Talro-logs")
 	end
 
 	local date = os.date("%d-%m-%Y")
@@ -17,7 +16,8 @@ function init(printOutput)
 	end
 
 	local filename = "Talro-logs/" .. date .. "-" .. count .. ".log"
-	logger.logFile = io.open(filename, "w")
+	logger.logFile = love.filesystem.newFile(filename)
+	logger.logFile:open("w")
 	log("Log starting...", 1)
 end
 

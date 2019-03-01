@@ -1,4 +1,5 @@
 Options = {}
+local fileName = 'options.conf'
 
 --keys that cannot be bound
 Options.prohibited = {
@@ -21,7 +22,8 @@ function Options.generateDefaults()
 		whip = {'t'}
 		}
 	}
-	local file = io.open('options.conf', 'w')
+	local file = love.filesystem.newFile(fileName)
+	file:open('w')
 	file:write(Serpent.block(options, {comment = false}))
 	file:close()
 end
@@ -30,15 +32,14 @@ end
 
 --Loads options table from options.conf
 function Options:loadOptions()
-	optionsFile = io.open('options.conf', 'r')
-	if optionsFile == nil then
+	if not love.filesystem.getInfo(fileName) then
 		self.generateDefaults()
 	end
 	
-	err, self.options = Util.loadTable('options.conf')
+	err, self.options = Util.loadTable(fileName)
 	if not err then 
 		self.generateDefaults()
-		err, self.options = Util.loadTable('options.conf')
+		err, self.options = Util.loadTable(fileName)
 	end
 	
 	self.moveKeys = {}
@@ -82,8 +83,7 @@ function Options:containsKey(key)
 end
 
 function Options:save()
-	local file = io.open('options.conf', 'w')
-	file:write(Serpent.block(self.options, {comment = false}))
+	love.filesystem.write(fileName, Serpent.block(self.options, {comment = false}))
 	file:close()
 end
 				

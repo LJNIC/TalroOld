@@ -30,8 +30,9 @@ function parseCSV(csvfile)
 end
 
 --Loads a file as a table using Serpent
-function loadTable(filename)
-	return Serpent.load(io.open(filename, 'r'):read('*all'))
+function loadTable(fileName)
+	local contents = love.filesystem.read(fileName)
+	return Serpent.load(contents)
 end
 
 function util.getOption()
